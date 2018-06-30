@@ -1,4 +1,4 @@
-# 关于我
+# 关于作者
 Neptune（微信：Nepxion），十多年Java EE从业经验，专注于Dubbo和SpringCloud等分布式微服务框架的研究和应用
 ```xml
 Hompage：http://www.imicroservice.com，http://www.nepxion.com

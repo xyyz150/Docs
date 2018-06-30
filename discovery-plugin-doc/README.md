@@ -1,3 +1,10 @@
+# 自我介绍
+Neptune（微信：Nepxion），十多年Java EE从业经验，专注于Dubbo和SpringCloud等分布式微服务框架的研究和应用
+```xml
+Hompage：http://www.imicroservice.com，http://www.nepxion.com
+Github：https://github.com/Nepxion
+```
+
 # 前言
 Spring Cloud如火如荼发展了好几年，作为一款基础的分布式微服务框架，它集成服务注册发现，负载均衡、断路器、API网关等，对于中小型互联网公司来说是一种福音。既然是隶属基础性的范畴，那么对业务应用方面的更细粒度需求考虑的有所欠缺。
 笔者尝试从服务注册发现方面去挖掘更多实际性的应用，例如你是否遇到过下面的情况：
@@ -120,7 +127,7 @@ Spring Cloud如火如荼发展了好几年，作为一款基础的分布式微�
 | discovery-plugin-starter-eureka | Eureka Starter |
 | discovery-plugin-starter-zookeeper | Zookeeper Starter |
 
-# 核心代码分析
+# 核心代码
 对DiscoveryClient做装饰模式处理
 ```java
 public class DiscoveryClientDecorator implements DiscoveryClient {

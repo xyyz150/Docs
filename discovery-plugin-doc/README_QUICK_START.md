@@ -11,6 +11,7 @@
 ### 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
 - 引入Pom依赖
   - 引入全局Pom依赖
+    插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -20,8 +21,6 @@
     <scope>import</scope>
 </dependency>
 ```
-${discovery.plugin.version}，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
-
   - 引入Eureka插件依赖
 ```xml
 <dependency>
@@ -29,7 +28,6 @@ ${discovery.plugin.version}，请参考[主页](https://github.com/Nepxion/Disco
     <artifactId>discovery-plugin-starter-eureka</artifactId>
 </dependency>
 ```
-
   - 引入Redis远程配置中心依赖
 ```xml
 <dependency>

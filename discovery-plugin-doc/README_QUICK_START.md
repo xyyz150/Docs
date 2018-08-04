@@ -139,6 +139,7 @@ public class ConsoleApplication {
   - 请访问https://pan.baidu.com/s/13os8AMFLBmu0De6Ruza-pQ获取
   - 解压后，请修改config/console.properties中的url，该地址指向独立控制台的地址
   - 运行Discovery灰度发布控制台.bat，启动桌面程序
+  - 如果您是Mac系统，请参考上述.bat，自行编写.sh脚本，或者下载Nepxion Discovery源码通过IDE启动discovery-console-desktop\ConsoleLauncher.java
 - 操作图形化灰度发布桌面程序
   - 请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
   - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰

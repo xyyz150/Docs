@@ -9,9 +9,9 @@
 - 更多详细内容请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
 
 ### 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
-- 引入Pom依赖
-  - 引入全局Pom依赖
-    插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
+#### 引入Pom依赖
+- 引入全局Pom依赖
+插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -21,14 +21,14 @@
     <scope>import</scope>
 </dependency>
 ```
-  - 引入Eureka插件依赖
+- 引入Eureka插件依赖
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
     <artifactId>discovery-plugin-starter-eureka</artifactId>
 </dependency>
 ```
-  - 引入Redis远程配置中心依赖
+- 引入Redis远程配置中心依赖
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>

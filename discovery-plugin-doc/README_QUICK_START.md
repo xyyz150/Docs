@@ -5,8 +5,8 @@
 [![Build Status](https://travis-ci.org/Nepxion/Discovery.svg?branch=master)](https://travis-ci.org/Nepxion/Discovery)
 
 ## 入门教程
-- 本教程以Eureka为服务注册发现，Redis为远程配置中心展开讲解，旨在帮您快速把本框架集成到您的业务系统中
-- 更多详细内容请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
+- 本教程以Eureka为服务注册发现，Redis为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
+- 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
 
 ### 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
 #### 引入Pom依赖

@@ -29,10 +29,35 @@
     <artifactId>discovery-plugin-starter-eureka</artifactId>
 </dependency>
 ```
-- 引入Redis远程配置中心依赖
+- 引入Redis远程配置中心扩展依赖
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
     <artifactId>discovery-plugin-config-center-extension-redis</artifactId>
 </dependency>
+```
+
+#### 添加配置
+```xml
+# Eureka config
+eureka.instance.metadataMap.version=1.0
+eureka.instance.metadataMap.group=example-service-group
+
+# Redis config
+spring.redis.host=localhost
+spring.redis.port=6379
+spring.redis.password=
+spring.redis.database=0
+spring.redis.pool.max-active=8
+spring.redis.pool.max-wait=-1
+spring.redis.pool.max-idle=8
+spring.redis.pool.min-idle=0
+
+# Admin config
+# 关闭访问Rest接口时候的权限验证
+management.security.enabled=false
+# E版配置方式
+management.port=5100
+# F版配置方式
+management.server.port=5100
 ```

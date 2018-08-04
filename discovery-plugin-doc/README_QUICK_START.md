@@ -117,5 +117,16 @@ management.port=3333
 management.server.port=3333
 ```
 
+#### 启动类
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class ConsoleApplication {
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(ConsoleApplication.class).run(args);
+    }
+}
+```
+
 #### 更多信息
 - 请参考discovery-springcloud-example-console工程

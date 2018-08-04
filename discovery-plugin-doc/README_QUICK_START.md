@@ -7,6 +7,7 @@
 ## 入门教程
 - 本教程以Eureka为服务注册发现，Redis为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
 - 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
+- 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）不在本文介绍范围内
 
 ### 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
 #### 引入Pom依赖
@@ -61,3 +62,60 @@ management.port=5100
 # F版配置方式
 management.server.port=5100
 ```
+
+#### 更多信息
+- 请参考discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
+
+### 搭建独立控制台
+#### 引入Pom依赖
+- 引入全局Pom依赖
+
+插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <artifactId>discovery</artifactId>
+    <version>${discovery.plugin.version}</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+```
+- 引入控制台依赖
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <artifactId>discovery-console-starter</artifactId>
+</dependency>
+```
+- 引入Redis远程配置中心扩展依赖
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <artifactId>discovery-console-extension-redis</artifactId>
+</dependency>
+```
+- 引入Eureka Client依赖
+
+#### 添加配置
+```xml
+# Redis config
+spring.redis.host=localhost
+spring.redis.port=6379
+spring.redis.password=
+spring.redis.database=0
+spring.redis.pool.max-active=8
+spring.redis.pool.max-wait=-1
+spring.redis.pool.max-idle=8
+spring.redis.pool.min-idle=0
+
+# Admin config
+# 关闭访问Rest接口时候的权限验证
+management.security.enabled=false
+# E版配置方式
+management.port=3333
+# F版配置方式
+management.server.port=3333
+```
+
+#### 更多信息
+- 请参考discovery-springcloud-example-console工程

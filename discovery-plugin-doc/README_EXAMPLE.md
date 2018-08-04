@@ -108,8 +108,16 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ### 服务发现和负载均衡控制的操作演示
 #### 基于图形化方式的多版本灰度访问控制
-- 请访问[http://www.iqiyi.com/w_19s07thtsh.html](http://www.iqiyi.com/w_19s07thtsh.html)，视频清晰度改成720P，然后最大化播放
-- 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+- 运行图形化灰度发布桌面程序
+  - 请访问https://pan.baidu.com/s/13os8AMFLBmu0De6Ruza-pQ获取
+  - 解压后，请修改config/console.properties中的url，该地址指向独立控制台的地址
+  - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
+  - 如果您是Mac系统，有两种方式启动桌面程序
+    - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动
+    - 下载Nepxion Discovery源码，通过IDE启动discovery-console-desktop\ConsoleLauncher.java启动
+- 图形化灰度发布桌面程序的操作视频
+  - 请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
+  - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
 
 #### 基于Rest方式的多版本灰度访问控制
 基于服务的操作过程和效果

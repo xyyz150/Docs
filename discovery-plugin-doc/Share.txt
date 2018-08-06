@@ -210,6 +210,55 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 贴图Admin2.jpg
 贴图Admin3.jpg
 ------------------------------------------------------------
+用户实现服务注册的监听
+代码截图
+public class MyRegisterListener extends AbstractRegisterListener {
+    @Override
+    public void onRegister(Registration registration) {
+    }
+
+    @Override
+    public void onDeregister(Registration registration) {
+    }
+
+    @Override
+    public void onSetStatus(Registration registration, String status) {
+    }
+
+    @Override
+    public void onClose() {
+    }
+}
+------------------------------------------------------------
+用户实现服务发现的监听
+代码截图
+public class MyDiscoveryListener extends AbstractDiscoveryListener {
+    @Override
+    public void onGetInstances(String serviceId, List<ServiceInstance> instances) {
+    }
+
+    @Override
+    public void onGetServices(List<String> services) {
+    }
+}
+------------------------------------------------------------
+用户实现负载均衡的监听
+代码截图
+public class MyLoadBalanceListener extends AbstractLoadBalanceListener {
+    @Override
+    public void onGetServers(String serviceId, List<? extends Server> servers) {
+    }
+}
+------------------------------------------------------------
+用户实现对注册失败的监听
+代码截图
+@EventBus
+public class MySubscriber {
+    @Subscribe
+    public void onRegisterFailure(RegisterFailureEvent registerFailureEvent) {
+    }
+}
+------------------------------------------------------------
 由于时间关系，我们今晚的分享就到这里，如您感兴趣，请访问，https://github.com/Nepxion/Discovery，感谢您Star和Fork，后续分享内容会整理到dockone.io论坛和docker公众号，欢迎大家关注，最后再次谢谢大家
 
 

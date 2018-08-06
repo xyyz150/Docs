@@ -286,7 +286,3 @@ public class MySubscriber {
 }
 ------------------------------------------------------------
 由于时间关系，我们今晚的分享就到这里，如您感兴趣，请访问，https://github.com/Nepxion/Discovery，感谢您Star和Fork，后续分享内容会整理到dockone.io论坛和docker公众号，欢迎大家关注，最后再次谢谢大家
-
-
-
-

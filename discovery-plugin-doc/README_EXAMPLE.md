@@ -203,7 +203,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
 
 ### 用户自定义和编程灰度路由的操作演示
-- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务示例不会被负载均衡到
+- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);

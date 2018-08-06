@@ -1,0 +1,216 @@
+大家好，我叫任浩军，来自SpringCloud中国社区，感谢DockOne社区群和李颖杰帮主给我这次机会，分享开源Nepxion Discovery框架
+------------------------------------------------------------
+引子：现有Spring Cloud微服务痛点
+1.如果你是运维负责人，是否会经常发现，你掌管的测试环境中的服务注册中心，被一些不负责的开发人员把他本地开发环境注册上来，造成测试人员测试失败。你希望可以把本地开发环境注册给屏蔽掉，不让注册
+2.如果你是运维负责人，生产环境的某个微服务集群下的某个实例，暂时出了问题，但又不希望它下线。你希望可以把该实例给屏蔽掉，暂时不让它被调用
+------------------------------------------------------------
+3.如果你是业务负责人，鉴于业务服务的快速迭代性，微服务集群下的实例发布不同的版本。你希望根据版本管理策略进行路由，提供给下游微服务区别调用，例如访问控制快速基于版本的不同而切换，例如在不同的版本之间进行流量调拨
+4.如果你是业务负责人，希望灰度发布功能可以基于业务场景特色定制，例如根据用户手机号进行不同服务器的路由
+------------------------------------------------------------
+5.如果你是测试负责人，希望对微服务做A/B测试，那么通过动态改变版本达到该目的
+------------------------------------------------------------
+Nepxion Discovery是一款对Spring Cloud服务注册发现和负载均衡的增强中间件，其功能包括灰度发布（包括切换发布和平滑发布），黑/白名单的IP地址过滤，限制注册，限制发现等，支持Eureka、Consul和Zookeeper，支持Spring Cloud Api Gateway（Finchley版）、Zuul网关和微服务的灰度发布，支持用户自定义和编程灰度路由策略，支持Nacos和Redis为远程配置中心，同时兼容Spring Cloud Edgware版和Finchley版
+------------------------------------------------------------
+Nepxion Discovery包含功能：
+实现对基于Spring Cloud的微服务和Spring Cloud Api Gateway（F版）和Zuul网关的支持
+1.具有极大的灵活性 - 支持在任何环节做过滤控制和灰度发布
+2.具有极小的限制性 - 只要开启了服务注册发现，程序入口加了@EnableDiscoveryClient
+3.具有极强的可用性 - 当远程配置中心全部挂了，可以通过Rest方式进行灰度发布
+------------------------------------------------------------
+实现服务注册层面的控制
+1.基于黑/白名单的IP地址过滤机制禁止对相应的微服务进行注册
+2.基于最大注册数的限制微服务注册。一旦微服务集群下注册的实例数目已经达到上限，将禁止后续的微服务进行注册
+------------------------------------------------------------
+实现服务发现层面的控制
+1.基于黑/白名单的IP地址过滤机制禁止对相应的微服务被发现
+2.基于版本号配对，通过对消费端和提供端可访问版本对应关系的配置，在服务发现和负载均衡层面，进行多版本访问控制
+3.基于版本权重配对，通过对消费端和提供端版本权重（流量）对应关系的配置，在服务发现和负载均衡层面，进行多版本流量调拨访问控制
+------------------------------------------------------------
+实现灰度发布
+1.通过版本的动态改变，实现切换灰度发布
+2.通过版本访问规则的改变，实现切换灰度发布
+3.通过版本权重规则的改变，实现平滑灰度发布
+------------------------------------------------------------
+实现通过XML或者Json进行上述规则的定义
+------------------------------------------------------------
+实现通过事件总线机制（EventBus）的功能，实现发布/订阅功能
+1.对接远程配置中心，集成Nacos和Redis，异步接受远程配置中心主动推送规则信息，动态改变微服务的规则
+2.结合Spring Boot Actuator，异步接受Rest主动推送规则信息，动态改变微服务的规则
+3.结合Spring Boot Actuator，动态改变微服务的版本
+4.在服务注册层面的控制中，一旦禁止注册的条件触发，主动推送异步事件，以便使用者订阅
+------------------------------------------------------------
+实现通过Listener机制进行扩展
+  使用者可以对服务注册发现核心事件进行监听
+实现通过扩展，用户自定义和编程灰度路由策略
+  使用者可以实现跟业务有关的路由策略，根据业务参数的不同，负载均衡到不同的服务器
+------------------------------------------------------------
+实现支持Spring Boot Admin的集成
+实现支持未来扩展更多的服务注册中心
+实现独立控制台微服务，支持对规则和版本集中管理、推送、更改和删除
+实现基于独立控制台微服务的图形化的灰度发布功能
+------------------------------------------------------------
+上述文中提到切换灰度发布和平滑灰度发布，切换灰度发布即在灰度发布的时候，没有过渡过程，流量直接从旧版本切换到新版本；平滑灰度发布即在灰度发布的时候，有个过渡过程，可以根据实际情况，先给新版本分配低额流量，给旧版本分配高额流量，对新版本进行监测，如果没有问题，就继续把旧版的流量切换到新版本上
+------------------------------------------------------------
+现有Spring Cloud微服务可以方便引入Nepxion Discovery，代码零侵入，使用者只需要做如下简单的事情：
+1.引入相关依赖到pom.xml
+2.在application.properties或者application.yml中，必须为微服务定义一个版本号（version），必须为微服务自定义一个组名（group）或者应用名（application）
+3.使用者只需要关注相关规则推送。可以采用如下方式之一
+  3.1 通过远程配置中心推送规则
+  3.2 通过控制台界面推送规则
+  3.3 通过客户端工具（例如Postman）推送 
+------------------------------------------------------------
+规则示例解释
+基于黑/白名单的IP地址过滤机制禁止对相应的微服务进行注册
+<register>
+    <blacklist>
+        <service service-name="a" filter-value="172.16"/>
+    </blacklist>
+    <whitelist>
+        <service service-name="a" filter-value="10.10"/>
+    </whitelist>	
+</register>
+黑名单，表示a服务注册到服务注册发现中心，如果它的IP起始为172.16，那么禁止注册
+白名单，表示a服务注册到服务注册发现中心，如果它的IP起始为10.10，那么允许注册
+------------------------------------------------------------
+基于最大注册数的限制微服务注册
+<register>
+    <count>
+        <service service-name="a" filter-value="500"/>
+    </count>
+</register>
+表示a服务注册到服务注册发现中心，当达到500个后，更多的实例将无法注册
+------------------------------------------------------------
+基于黑/白名单的IP地址过滤机制禁止对相应的微服务被发现
+<discovery>
+    <blacklist>
+        <service service-name="a" filter-value="172.16"/>
+    </blacklist>
+    <whitelist>
+        <service service-name="a" filter-value="10.10"/>
+    </whitelist>	
+</discovery>
+黑名单，表示a服务的IP起始为172.16，那么禁止被发现
+白名单，表示a服务的IP起始为10.10，那么允许被发现
+------------------------------------------------------------
+服务发现的多版本灰度访问控制
+<discovery>
+    <version>
+        <service consumer-service-name="a" provider-service-name="b" consumer-version-value="1.0" provider-version-value="1.0"/>
+        <service consumer-service-name="a" provider-service-name="b" consumer-version-value="1.1" provider-version-value="1.1"/>		
+    </version>
+</discovery>
+表示消费端服务a的1.0，允许访问提供端服务b的1.0版本
+表示消费端服务a的1.1，允许访问提供端服务b的1.1版本
+------------------------------------------------------------
+服务发现的多版本权重灰度访问控制
+<discovery>
+    <weight>
+        <service consumer-service-name="a" provider-service-name="b" provider-weight-value="1.0=90;1.1=10"/>
+    </weight>
+</discovery>
+表示消费端服务a访问提供端服务b的时候，提供端服务b的1.0版本提供90%的权重流量，1.1版本提供10%的权重流量
+------------------------------------------------------------
+架构图
+贴图片Architecture.jpg
+------------------------------------------------------------
+两个基于Zuul的灰度发布示例
+------------------------------------------------------------
+基于Zuul版本切换的灰度发布
+灰度发布前
+1.假设当前生产环境，调用路径为网关(V1.0)->服务A(V1.0)->服务B(V1.0)
+2.运维将发布新的生产环境，部署新服务集群，服务A(V1.1)，服务B(V1.1)
+3.由于网关(1.0)并未指向服务A(V1.1)，服务B(V1.1)，所以它们是不能被调用的
+灰度发布中
+1.新增用作灰度发布的网关(V1.1)，指向服务A(V1.1)->服务B(V1.1)
+2.灰度网关(V1.1)发布到服务注册发现中心，但禁止被服务发现，网关外的调用进来无法负载均衡到网关(V1.1)上
+3.在灰度网关(V1.1)->服务A(V1.1)->服务B(V1.1)这条调用路径做灰度测试
+4.灰度测试成功后，把网关(V1.0)指向服务A(V1.1)->服务B(V1.1)
+灰度发布后
+1.下线服务A(V1.0)，服务B(V1.0)，灰度成功
+2.灰度网关(V1.1)可以不用下线，留作下次版本上线再次灰度发布
+------------------------------------------------------------
+基于Zuul版本权重的灰度发布
+灰度发布前
+1.当前Zuul为V1.0版本
+2.V1.0版本的Zuul承担老版本100%的流量
+灰度发布中
+1.新增ZuulV1.1版本
+1.V1.0版本的Zuul调拨10%流量给V1.1的Zuul
+2.通过观测确认灰度有效，把V1.0版本的版本逐渐切换到V1.1上
+灰度发布后
+1.下线V1.0版本的Zuul集群
+------------------------------------------------------------
+用户自定义和编程灰度路由策略
+表示在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务示例不会被负载均衡到
+代码截图
+public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+
+    @Override
+    public boolean apply(Server server, Map<String, String> metadata) {
+        RequestContext context = RequestContext.getCurrentContext();
+        String token = context.getRequest().getHeader("token");
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String filterToken = "abc";
+        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+
+            return false;
+        }
+
+        return true;
+    }
+}
+------------------------------------------------------------
+表示在服务层，当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
+代码截图
+public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+
+    @Override
+    public boolean apply(Server server, Map<String, String> metadata) {
+        ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
+        Map<String, Object> attributes = context.getAttributes();
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String version = metadata.get(PluginConstant.VERSION);
+
+        String filterServiceId = "discovery-springcloud-example-c";
+        String filterVersion = "1.0";
+        String filterBusinessValue = "abc";
+        if (StringUtils.equals(serviceId, filterServiceId) && StringUtils.equals(version, filterVersion)) {
+            if (attributes.containsKey(ServiceStrategyConstant.PARAMETER_MAP)) {
+                Map<String, Object> parameterMap = (Map<String, Object>) attributes.get(ServiceStrategyConstant.PARAMETER_MAP);
+                String value = parameterMap.get("value").toString();
+                if (StringUtils.isNotEmpty(value) && value.contains(filterBusinessValue)) {
+                    LOG.info("过滤条件：当serviceId={} && version={} && 业务参数含有'{}'的时候，不能被Ribbon负载均衡到", filterServiceId, filterVersion, filterBusinessValue);
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+------------------------------------------------------------
+图形化灰度发布桌面程序
+贴图Console1.jpg
+贴图Console2.jpg
+
+灰度发布-版本访问策略
+  请访问https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+灰度发布-版本权重策略
+  请访问https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+------------------------------------------------------------
+跟Spring Boot Admin整合
+实现相关一系列的监控
+贴图Admin1.jpg
+贴图Admin2.jpg
+贴图Admin3.jpg
+------------------------------------------------------------
+由于时间关系，我们今晚的分享就到这里，如您感兴趣，请访问，https://github.com/Nepxion/Discovery，感谢您Star和Fork，后续分享内容会整理到dockone.io论坛和docker公众号，欢迎大家关注，最后再次谢谢大家
+
+
+
+

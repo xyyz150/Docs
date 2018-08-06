@@ -210,7 +210,7 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 贴图Admin2.jpg
 贴图Admin3.jpg
 ------------------------------------------------------------
-用户实现服务注册的监听
+用户实现服务注册的监听，当负服务注册的时候，用户会收到下面的事件
 代码截图
 public class MyRegisterListener extends AbstractRegisterListener {
     @Override
@@ -230,7 +230,7 @@ public class MyRegisterListener extends AbstractRegisterListener {
     }
 }
 ------------------------------------------------------------
-用户实现服务发现的监听
+用户实现服务发现的监听，当负服务发现过滤的时候，用户会收到下面的事件
 代码截图
 public class MyDiscoveryListener extends AbstractDiscoveryListener {
     @Override
@@ -242,7 +242,7 @@ public class MyDiscoveryListener extends AbstractDiscoveryListener {
     }
 }
 ------------------------------------------------------------
-用户实现负载均衡的监听
+用户实现负载均衡的监听，当负载均衡启动过滤的时候，用户会收到下面的事件
 代码截图
 public class MyLoadBalanceListener extends AbstractLoadBalanceListener {
     @Override
@@ -250,7 +250,7 @@ public class MyLoadBalanceListener extends AbstractLoadBalanceListener {
     }
 }
 ------------------------------------------------------------
-用户实现对注册失败的监听
+用户实现对注册失败的监听，当黑名单激活的时候，会触发注册失败，那么用户会收到一个注册失败的事件
 代码截图
 @EventBus
 public class MySubscriber {

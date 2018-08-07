@@ -235,7 +235,7 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
 
-- 在服务层，编程灰度路由策略，如下代码，因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
+- 在服务层，编程灰度路由策略，如下代码，因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-c，且版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
 ```java
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);

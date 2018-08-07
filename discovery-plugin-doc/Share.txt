@@ -1,3 +1,16 @@
+题目：Nepxion Discovery：Spring Cloud灰度发布神器
+摘要：Nepxion Discovery是一款对Spring Cloud服务注册发现和负载均衡的增强中间件，其功能包括灰度发布（包括切换发布和平滑发布），黑/白名单的IP地址过滤，限制注册，限制发现等，支持Eureka、Consul和Zookeeper，支持Spring Cloud Api Gateway（Finchley版）、Zuul网关和微服务的灰度发布，支持用户自定义和编程灰度路由策略，支持Nacos和Redis为远程配置中心，同时兼容Spring Cloud Edgware版和Finchley版
+大纲：
+1.现有Spring Cloud微服务痛点
+2.Spring Cloud微服务痛点场景表现
+3.Nepxion Discovery概念和功能介绍
+4.Nepxion Discovery规则和策略介绍
+5.两个基于网关的灰度发布示例
+6.用户自定义和编程灰度路由策略
+7.用户自定义灰度发布监听
+8.图形化灰度发布桌面程序
+9.跟Spring Boot Admin整合
+------------------------------------------------------------
 大家好，我叫任浩军，来自SpringCloud中国社区，感谢DockOne社区群和李颖杰帮主给我这次机会，分享开源Nepxion Discovery框架
 ------------------------------------------------------------
 引子：现有Spring Cloud微服务痛点
@@ -221,24 +234,6 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     }
 }
 ------------------------------------------------------------
-图形化灰度发布桌面程序
-贴图Console1.jpg
-贴图Console2.jpg
-
-具体操作不详细述说了，请看相关视频
-灰度发布-版本访问策略
-  请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
-  请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
-灰度发布-版本权重策略
-  请访问[https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw](https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
-  请访问[http://www.iqiyi.com/w_19rzs9pll1.html](http://www.iqiyi.com/w_19rzs9pll1.html)，视频清晰度改成720P，然后最大化播放
-------------------------------------------------------------
-跟Spring Boot Admin整合
-实现相关一系列的监控
-贴图Admin1.jpg
-贴图Admin2.jpg
-贴图Admin3.jpg
-------------------------------------------------------------
 用户实现服务注册的监听，当负服务注册的时候，用户会收到下面的事件
 代码截图
 public class MyRegisterListener extends AbstractRegisterListener {
@@ -287,5 +282,23 @@ public class MySubscriber {
     public void onRegisterFailure(RegisterFailureEvent registerFailureEvent) {
     }
 }
+------------------------------------------------------------
+图形化灰度发布桌面程序
+贴图Console1.jpg
+贴图Console2.jpg
+
+具体操作不详细述说了，请看相关视频
+灰度发布-版本访问策略
+  请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+  请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
+灰度发布-版本权重策略
+  请访问[https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw](https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+  请访问[http://www.iqiyi.com/w_19rzs9pll1.html](http://www.iqiyi.com/w_19rzs9pll1.html)，视频清晰度改成720P，然后最大化播放
+------------------------------------------------------------
+跟Spring Boot Admin整合
+实现相关一系列的监控
+贴图Admin1.jpg
+贴图Admin2.jpg
+贴图Admin3.jpg
 ------------------------------------------------------------
 由于时间关系，我们今晚的分享就到这里，如您感兴趣，请访问，https://github.com/Nepxion/Discovery，感谢您Star和Fork，后续分享内容会整理到dockone.io论坛和docker公众号，欢迎大家关注，最后再次谢谢大家

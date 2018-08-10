@@ -20,7 +20,8 @@
 3.如果你是业务负责人，鉴于业务服务的快速迭代性，微服务集群下的实例发布不同的版本。你希望根据版本管理策略进行路由，提供给下游微服务区别调用，例如访问控制快速基于版本的不同而切换，例如在不同的版本之间进行流量调拨
 4.如果你是业务负责人，希望灰度发布功能可以基于业务场景特色定制，例如根据用户手机号进行不同服务器的路由
 ------------------------------------------------------------
-5.如果你是测试负责人，希望对微服务做A/B测试，那么通过动态改变版本达到该目的
+5.如果你是DBA负责人，希望灰度发布功能可以基于数据库切换上
+6.如果你是测试负责人，希望对微服务做A/B测试，那么通过动态改变版本达到该目的
 ------------------------------------------------------------
 引子：上述痛点所表现的场景，如下：
 黑/白名单的IP地址注册的过滤
@@ -41,6 +42,9 @@ A服务调用B服务，而B服务有两个实例（B1、B2），虽然三者相�
 多版本权重的灰度控制
 上述场景中，我们也可以通过配对不同版本的权重（流量比例），根据需求，A访问B的流量在B1和B2进行调拨
 ------------------------------------------------------------
+多数据源的数据库灰度控制
+我们事先为微服务配置多套数据源，通过灰度发布实时切换数据源
+------------------------------------------------------------ 
 动态改变微服务版本
 在A/B测试中，通过动态改变版本，不重启微服务，达到访问版本的路径改变
 ------------------------------------------------------------
@@ -149,6 +153,13 @@ Nepxion Discovery包含功能：
 </discovery>
 表示消费端服务a访问提供端服务b的时候，提供端服务b的1.0版本提供90%的权重流量，1.1版本提供10%的权重流量
 ------------------------------------------------------------
+服务发现的多版本权重灰度访问控制
+<customization>
+    <service service-name="discovery-springcloud-example-b" key="database" value="prod"/>
+</customization>
+表示服务b有两个库的配置，分别是临时数据库（database的value为temp）和生产数据库（database的value为prod）
+上线后，一开始数据库指向临时数据库，对应value为temp，然后灰度发布的时候，改对应value为prod，即实现数据库的灰度发布
+------------------------------------------------------------
 架构图
 贴图片Architecture.jpg
 ------------------------------------------------------------
@@ -231,6 +242,34 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
         }
 
         return true;
+    }
+}
+------------------------------------------------------------
+使用者可以通过订阅业务参数的变化，实现特色化的灰度发布，例如，多数据源的数据库切换的灰度发布
+代码截图
+@EventBus
+public class MySubscriber {
+    @Autowired
+    private PluginAdapter pluginAdapter;
+
+    @Subscribe
+    public void onCustomization(CustomizationEvent customizationEvent) {
+        CustomizationEntity customizationEntity = customizationEvent.getCustomizationEntity();
+        String serviceId = pluginAdapter.getServiceId();
+        if (customizationEntity != null) {
+            Map<String, Map<String, String>> customizationMap = customizationEntity.getCustomizationMap();
+            Map<String, String> customizationParameter = customizationMap.get(serviceId);
+            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationParameter=" + customizationParameter);
+            // 根据customizationParameter的参数动态切换数据源
+        } else {
+            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationEntity=" + customizationEntity);
+            // 根据customizationParameter的参数动态切换数据源
+        }
+    }
+
+    @Subscribe
+    public void onRegisterFailure(RegisterFailureEvent registerFailureEvent) {
+        System.out.println("========== 注册失败, eventType=" + registerFailureEvent.getEventType() + ", eventDescription=" + registerFailureEvent.getEventDescription() + ", serviceId=" + registerFailureEvent.getServiceId() + ", host=" + registerFailureEvent.getHost() + ", port=" + registerFailureEvent.getPort());
     }
 }
 ------------------------------------------------------------

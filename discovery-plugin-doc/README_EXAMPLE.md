@@ -204,7 +204,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
 
 ### 多数据源的数据库切换的灰度发布
-- 
+- 监听规则的变化，获取客户化的参数，根据参数的变化动态切换数据源
 ```java
 @EventBus
 public class MySubscriber {

@@ -192,6 +192,12 @@ Nepxion Discovery包含功能：
 3.如果您对新服务比较自信，可以更简化，可以不用灰度网关和灰度测试，当服务A(V1.1)上线后，原有网关直接指向服务A(V1.1)，然后下线服务A(V1.0)
 ------------------------------------------------------------
 用户自定义和编程灰度路由策略
+使用者可以实现跟业务有关的路由策略，根据业务参数的不同，负载均衡到不同的服务器
+1.基于服务的编程灰度路由，继承DiscoveryEnabledAdapter，通过RequestContextHolder（获取来自网关的Header参数）和ServiceStrategyContext（获取来自RPC方式的方法参数）获取业务上下文参数，进行路由自定义
+2.基于Zuul的编程灰度路由，继承DiscoveryEnabledAdapter，通过Zuul自带的RequestContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
+3.基于Spring Cloud Api Gateway的编程灰度路由，继承DiscoveryEnabledAdapter，通过GatewayStrategyContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
+举例如下：
+------------------------------------------------------------
 表示在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务示例不会被负载均衡到
 代码截图
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {

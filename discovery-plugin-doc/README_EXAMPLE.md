@@ -122,6 +122,9 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
   - 灰度发布-版本权重策略
     - 请访问[https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw](https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19rzs9pll1.html](http://www.iqiyi.com/w_19rzs9pll1.html)，视频清晰度改成720P，然后最大化播放
+  - 灰度发布-全链路策略
+    - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
+    - 请访问[http://www.iqiyi.com/w_19rzs9pll1.html](http://www.iqiyi.com/w_19rzs9pll1.html)，视频清晰度改成720P，然后最大化播放
 
 #### 基于Rest方式的多版本灰度访问控制
 基于服务的操作过程和效果
@@ -229,7 +232,8 @@ public class MySubscriber {
 ```
 
 ### 用户自定义和编程灰度路由的操作演示
-- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
+- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
+  - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
@@ -256,23 +260,64 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 }
 ```
 
-图8
-
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
-
-- 在服务层，编程灰度路由策略，如下代码，因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
+- 在网关层（以Spring Cloud Api Gateway为例），编程灰度路由策略，如下代码，策略：
+  - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
+        GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
+        String token = context.getExchange().getRequest().getHeaders().getFirst("token");
+        // String value = context.getExchange().getRequest().getQueryParams().getFirst("value");
+
+        // 执行完后，请手工清除上下文对象，否则可能会造成内存泄露
+        GatewayStrategyContext.clearCurrentContext();
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+
+        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
+        String filterToken = "abc";
+        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+图8
+
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
+
+- 在服务层，编程灰度路由策略，如下代码，同时启动两种策略：
+  - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
+  - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
+```java
+public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+
+    @Override
+    public boolean apply(Server server, Map<String, String> metadata) {
+        if (applyFromMethd(server, metadata)) {
+            return applyFromHeader(server, metadata);
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean applyFromMethd(Server server, Map<String, String> metadata) {
         ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
         Map<String, Object> attributes = context.getAttributes();
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
-        String version = metadata.get(PluginConstant.VERSION);
+        String version = metadata.get(DiscoveryConstant.VERSION);
 
         LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
 
@@ -289,6 +334,25 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
                     return false;
                 }
             }
+        }
+
+        return true;
+    }
+
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String token = attributes.getRequest().getHeader("token");
+        // String value = attributes.getRequest().getParameter("value");
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+
+        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
+
+        String filterToken = "123";
+        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+
+            return false;
         }
 
         return true;

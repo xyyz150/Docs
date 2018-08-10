@@ -203,6 +203,31 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
 
+### 多数据源的数据库切换的灰度发布
+- 
+```java
+@EventBus
+public class MySubscriber {
+    @Autowired
+    private PluginAdapter pluginAdapter;
+
+    @Subscribe
+    public void onCustomization(CustomizationEvent customizationEvent) {
+        CustomizationEntity customizationEntity = customizationEvent.getCustomizationEntity();
+        String serviceId = pluginAdapter.getServiceId();
+        if (customizationEntity != null) {
+            Map<String, Map<String, String>> customizationMap = customizationEntity.getCustomizationMap();
+            Map<String, String> customizationParameter = customizationMap.get(serviceId);
+            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationParameter=" + customizationParameter);
+            // 根据customizationParameter的参数动态切换数据源
+        } else {
+            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationEntity=" + customizationEntity);
+            // 根据customizationParameter的参数动态切换数据源
+        }
+    }
+}
+```
+
 ### 用户自定义和编程灰度路由的操作演示
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java

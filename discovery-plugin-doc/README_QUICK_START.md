@@ -136,7 +136,7 @@ public class ConsoleApplication {
 - 运行独立控制台
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 - 运行图形化灰度发布桌面程序
-  - 请访问[https://pan.baidu.com/s/1Ok4NT87giJfJ8F9uidIO9w](https://pan.baidu.com/s/1Ok4NT87giJfJ8F9uidIO9w)获取
+  - 请访问[https://pan.baidu.com/s/1D21YQk1iu_dUP97AWCcYJg](https://pan.baidu.com/s/1D21YQk1iu_dUP97AWCcYJg)获取
   - 解压后，请修改config/console.properties中的url，该地址指向独立控制台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
   - 如果您是Mac系统，有两种方式启动桌面程序

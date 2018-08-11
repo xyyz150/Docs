@@ -66,7 +66,7 @@ management.server.port=5100
 #### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
-### 搭建独立控制台
+### 搭建控制平台
 #### 引入Pom依赖
 - 引入全局Pom依赖
 
@@ -133,11 +133,11 @@ public class ConsoleApplication {
 
 ### 检验成果
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取
-- 运行独立控制台
+- 运行控制平台
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 - 运行图形化灰度发布桌面程序
   - 请访问[https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg](https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg)获取
-  - 解压后，请修改config/console.properties中的url，该地址指向独立控制台的地址
+  - 解压后，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
   - 如果您是Mac系统，有两种方式启动桌面程序
     - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动

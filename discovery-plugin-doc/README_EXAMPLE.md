@@ -56,7 +56,7 @@
 | Zuul | 1400 | 5400 | 1.0 |
 | Gateway | 1500 | 5500 | 1.0 |
 
-独立控制台见discovery-springcloud-example-console，对应的版本和端口号如下表
+控制平台见discovery-springcloud-example-console，对应的版本和端口号如下表
 
 | 服务端口 | 管理端口 |
 | --- | --- |
@@ -110,7 +110,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 #### 基于图形化方式的多版本灰度访问控制
 - 运行图形化灰度发布桌面程序
   - 请访问[https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg](https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg)获取
-  - 解压后，请修改config/console.properties中的url，该地址指向独立控制台的地址
+  - 解压后，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
   - 如果您是Mac系统，有两种方式启动桌面程序
     - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动
@@ -137,18 +137,18 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 - 通过版本访问规则改变，达到灰度访问控制，针对B服务
   - 2.1 通过Postman，执行POST [http://localhost:1200/config/update-sync](http://localhost:1200/config/update-sync)，发送新的版本访问规则（内容见下面）
   - 2.2 通过Postman，执行POST [http://localhost:1201/config/update-sync](http://localhost:1201/config/update-sync)，发送新的版本访问规则（内容见下面）
-  - 2.3 上述操作也可以通过独立控制台，进行批量更新，见图5。操作的逻辑：B服务的所有版本都只能访问C服务3.0版本，而本例中C服务3.0版本是不存在的，意味着这么做B服务不能访问C服务
+  - 2.3 上述操作也可以通过控制平台，进行批量更新，见图5。操作的逻辑：B服务的所有版本都只能访问C服务3.0版本，而本例中C服务3.0版本是不存在的，意味着这么做B服务不能访问C服务
   - 2.4 重复1.1步骤，发现调用路径只有A服务->B服务，如图3，通过规则改变，灰度访问控制成功
 - 通过版本权重规则改变，达到灰度访问控制，针对B服务
   - 2.1 通过Postman，执行POST [http://localhost:1200/config/update-sync](http://localhost:1200/config/update-sync)，发送新的版本权重规则（内容见下面）
   - 2.2 通过Postman，执行POST [http://localhost:1201/config/update-sync](http://localhost:1201/config/update-sync)，发送新的版本权重规则（内容见下面）
-  - 2.3 上述操作也可以通过独立控制台，进行批量更新，见图5。操作的逻辑：B服务1.0的版本向A服务提供10%流量，B服务1.1的版本向A服务提供90%流量
+  - 2.3 上述操作也可以通过控制平台，进行批量更新，见图5。操作的逻辑：B服务1.0的版本向A服务提供10%流量，B服务1.1的版本向A服务提供90%流量
   - 2.4 不断重复执行3.1步骤，观察Ribbo负载均衡的时候，在调用B1.0和B1.1命中的概率，灰度权重控制成功
 - 负载均衡的灰度测试
   - 3.1 通过Postman，执行POST [http://localhost:1100/invoke](http://localhost:1100/invoke)，这是example内置的访问路径示例（通过Feign实现）
   - 3.2 重复“通过版本改变，达到灰度访问控制”或者“通过规则改变，达到灰度访问控制”操作，查看Ribbon负载均衡的灰度结果，如图4
-- 上述操作，都是单次操作，如需要批量操作，可通过“独立控制台”接口，它集成批量操作和推送到远程配置中心的功能，可以取代上面的某些调用方式
-- 其它更多操作，请参考“配置中心”、“管理中心”和“独立控制台”
+- 上述操作，都是单次操作，如需要批量操作，可通过“控制平台”接口，它集成批量操作和推送到远程配置中心的功能，可以取代上面的某些调用方式
+- 其它更多操作，请参考“配置中心”、“管理中心”和“控制平台”
 
 新的版本访问规则
 ```xml

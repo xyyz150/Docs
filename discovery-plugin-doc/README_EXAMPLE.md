@@ -238,6 +238,7 @@ public class MySubscriber {
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
+    // 根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例	
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         RequestContext context = RequestContext.getCurrentContext();
@@ -266,6 +267,7 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
+    // 根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
@@ -296,7 +298,7 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
 
 - 在服务层，编程灰度路由策略，如下代码，同时启动两种策略：
-  - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
+  - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-b，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
@@ -304,41 +306,14 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
-        if (applyFromMethd(server, metadata)) {
-            return applyFromHeader(server, metadata);
+        if (applyFromHeader(server, metadata)) {
+            return applyFromMethd(server, metadata);
         } else {
             return false;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean applyFromMethd(Server server, Map<String, String> metadata) {
-        ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
-        Map<String, Object> attributes = context.getAttributes();
-
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
-        String version = metadata.get(DiscoveryConstant.VERSION);
-
-        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
-
-        String filterServiceId = "discovery-springcloud-example-c";
-        String filterVersion = "1.0";
-        String filterBusinessValue = "abc";
-        if (StringUtils.equals(serviceId, filterServiceId) && StringUtils.equals(version, filterVersion)) {
-            if (attributes.containsKey(ServiceStrategyConstant.PARAMETER_MAP)) {
-                Map<String, Object> parameterMap = (Map<String, Object>) attributes.get(ServiceStrategyConstant.PARAMETER_MAP);
-                String value = parameterMap.get("value").toString();
-                if (StringUtils.isNotEmpty(value) && value.contains(filterBusinessValue)) {
-                    LOG.info("过滤条件：当serviceId={} && version={} && 业务参数含有'{}'的时候，不能被Ribbon负载均衡到", filterServiceId, filterVersion, filterBusinessValue);
-
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
+    // 方式1，根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
@@ -352,11 +327,41 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 
         LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
 
+        String filterServiceId = "discovery-springcloud-example-c";
         String filterToken = "123";
-        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
-            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+        if (StringUtils.equals(serviceId, filterServiceId) && StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当serviceId={} && Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
 
             return false;
+        }
+
+        return true;
+    }
+
+    // 方式2，根据下游服务传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
+    @SuppressWarnings("unchecked")
+    private boolean applyFromMethd(Server server, Map<String, String> metadata) {
+        ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
+        Map<String, Object> attributes = context.getAttributes();
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String version = metadata.get(DiscoveryConstant.VERSION);
+
+        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
+        String filterServiceId = "discovery-springcloud-example-b";
+        String filterVersion = "1.0";
+        String filterBusinessValue = "abc";
+        if (StringUtils.equals(serviceId, filterServiceId) && StringUtils.equals(version, filterVersion)) {
+            if (attributes.containsKey(ServiceStrategyConstant.PARAMETER_MAP)) {
+                Map<String, Object> parameterMap = (Map<String, Object>) attributes.get(ServiceStrategyConstant.PARAMETER_MAP);
+                String value = parameterMap.get("value").toString();
+                if (StringUtils.isNotEmpty(value) && value.contains(filterBusinessValue)) {
+                    LOG.info("过滤条件：当serviceId={} && version={} && 业务参数含有'{}'的时候，不能被Ribbon负载均衡到", filterServiceId, filterVersion, filterBusinessValue);
+
+                    return false;
+                }
+            }
         }
 
         return true;

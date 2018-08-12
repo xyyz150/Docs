@@ -109,7 +109,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 ### 服务发现和负载均衡控制的操作演示
 #### 基于图形化方式的多版本灰度访问控制
 - 运行图形化灰度发布桌面程序
-  - 请访问[https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg](https://pan.baidu.com/s/1ZSKs3lByZWWNwGm8vvN9Fg)获取
+  - 请访问[https://pan.baidu.com/s/1UsMTcaonFUXBV4yE3uinfA](https://pan.baidu.com/s/1UsMTcaonFUXBV4yE3uinfA)获取
   - 解压后，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
   - 如果您是Mac系统，有两种方式启动桌面程序

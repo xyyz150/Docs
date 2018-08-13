@@ -86,6 +86,7 @@ Nepxion Discovery包含功能：
   使用者可以对服务注册发现核心事件进行监听
 实现通过扩展，用户自定义和编程灰度路由策略
   使用者可以实现跟业务有关的路由策略，根据业务参数的不同，负载均衡到不同的服务器
+  使用者可以根据内置的版本路由策略+自定义策略，随心所欲的达到需要的路由功能
 ------------------------------------------------------------
 实现支持Spring Boot Admin的集成
 实现支持未来扩展更多的服务注册中心
@@ -110,7 +111,7 @@ Nepxion Discovery包含功能：
     </blacklist>
     <whitelist>
         <service service-name="a" filter-value="10.10"/>
-    </whitelist>	
+    </whitelist>
 </register>
 黑名单，表示a服务注册到服务注册发现中心，如果它的IP起始为172.16，那么禁止注册
 白名单，表示a服务注册到服务注册发现中心，如果它的IP起始为10.10，那么允许注册
@@ -130,7 +131,7 @@ Nepxion Discovery包含功能：
     </blacklist>
     <whitelist>
         <service service-name="a" filter-value="10.10"/>
-    </whitelist>	
+    </whitelist>
 </discovery>
 黑名单，表示a服务的IP起始为172.16，那么禁止被发现
 白名单，表示a服务的IP起始为10.10，那么允许被发现
@@ -267,10 +268,8 @@ public class MySubscriber {
         if (customizationEntity != null) {
             Map<String, Map<String, String>> customizationMap = customizationEntity.getCustomizationMap();
             Map<String, String> customizationParameter = customizationMap.get(serviceId);
-            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationParameter=" + customizationParameter);
             // 根据customizationParameter的参数动态切换数据源
         } else {
-            System.out.println("========== 获取客户化对象, serviceId=" + serviceId + ", customizationEntity=" + customizationEntity);
             // 根据customizationParameter的参数动态切换数据源
         }
     }

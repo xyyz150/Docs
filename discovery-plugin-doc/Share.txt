@@ -201,6 +201,18 @@ Nepxion Discovery包含功能：
 3.基于Spring Cloud Api Gateway的编程灰度路由，继承DiscoveryEnabledAdapter，通过GatewayStrategyContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
 举例如下：
 ------------------------------------------------------------
+基于Rest请求Header头部自带版本规则的实时动态路由
+场景举例：外部->网关->A服务，A服务有a1, a2两个实例，a1和a2是一模一样的两个服务，但a1和a2的区别是连的数据库是不同的。a1对接外部的民生银行通道，a2对接外部的浦发银行通道。那么外部Rest经过网关时，自动根据版本号路由到正确的服务上
+贴图Result10.jpg
+
+如图所示，当前从Postman发起的请求，当走到example-a服务的时候，只能走1.0版本，到example-b服务的时候，也是1.0版本，到example-c服务的时候，能路由到1.1和1.2版本，下面的打印出来的结果印证了这个路由方式
+
+加如下代码即可实现该功能
+@Bean
+public VersionDiscoveryEnabledAdapter versionDiscoveryEnabledAdapter() {
+    return new VersionDiscoveryEnabledAdapter();
+}
+------------------------------------------------------------
 表示在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务示例不会被负载均衡到
 代码截图
 public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {

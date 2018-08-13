@@ -233,15 +233,29 @@ public class MySubscriber {
 ```
 
 ### 用户自定义和编程灰度路由的操作演示
+以通过Rest方式实时版本路由策略+自定义策略组合为例，具体请参考，图8、图9、图10
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+// 实现了组合策略，版本路由策略+自定义策略
+// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
+public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
-    // 根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例	
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
+        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
+        boolean enabled = super.apply(server, metadata);
+        if (!enabled) {
+            return false;
+        }
+
+        // 2.对Rest调用传来的Header参数（例如Token）做策略
+        return applyFromHeader(server, metadata);
+    }
+
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
         RequestContext context = RequestContext.getCurrentContext();
         String token = context.getRequest().getHeader("token");
         // String value = context.getRequest().getParameter("value");
@@ -265,18 +279,28 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 - 在网关层（以Spring Cloud Api Gateway为例），编程灰度路由策略，如下代码，策略：
   - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+// 实现了组合策略，版本路由策略+自定义策略
+// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
+public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
-    // 根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
+        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
+        boolean enabled = super.apply(server, metadata);
+        if (!enabled) {
+            return false;
+        }
+
+        // 2.对Rest调用传来的Header参数（例如Token）做策略
+        return applyFromHeader(server, metadata);
+    }
+
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
         GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
         String token = context.getExchange().getRequest().getHeaders().getFirst("token");
         // String value = context.getExchange().getRequest().getQueryParams().getFirst("value");
-
-        // 执行完后，请手工清除上下文对象，否则可能会造成内存泄露
-        GatewayStrategyContext.clearCurrentContext();
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
 
@@ -294,27 +318,34 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 }
 ```
 
-图8
-
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
-
 - 在服务层，编程灰度路由策略，如下代码，同时启动两种策略：
   - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-b，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
+// 实现了组合策略，版本路由策略+自定义策略
+// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
+public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
-        if (applyFromHeader(server, metadata)) {
-            return applyFromMethd(server, metadata);
-        } else {
+        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
+        boolean enabled = super.apply(server, metadata);
+        if (!enabled) {
             return false;
         }
+
+        // 2.对Rest调用传来的Header参数（例如Token）做策略
+        enabled = applyFromHeader(server, metadata);
+        if (!enabled) {
+            return false;
+        }
+
+        // 3.对RPC调用传来的方法参数做策略
+        return applyFromMethd(server, metadata);
     }
 
-    // 方式1，根据外部传来的Header参数（例如Token），选取执行调用请求的服务实例
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
@@ -339,7 +370,7 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
         return true;
     }
 
-    // 方式2，根据下游服务传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
+    // 根据RPC调用传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
     @SuppressWarnings("unchecked")
     private boolean applyFromMethd(Server server, Map<String, String> metadata) {
         ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
@@ -370,6 +401,14 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 }
 ```
 
+图8
+
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
+
 图9
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result9.jpg)
+
+图10
+
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result10.jpg)

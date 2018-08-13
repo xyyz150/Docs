@@ -109,12 +109,13 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 ### 服务发现和负载均衡控制的操作演示
 #### 基于图形化方式的多版本灰度访问控制
 - 运行图形化灰度发布桌面程序
-  - 请访问[https://pan.baidu.com/s/1UsMTcaonFUXBV4yE3uinfA](https://pan.baidu.com/s/1UsMTcaonFUXBV4yE3uinfA)获取
-  - 解压后，请修改config/console.properties中的url，该地址指向控制平台的地址
+  - Clone https://github.com/Nepxion/Discovery.git获取源码（注意master和Edgware分支）
+  - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
+  - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
   - 如果您是Mac系统，有两种方式启动桌面程序
     - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动
-    - 下载Nepxion Discovery源码，通过IDE启动discovery-console-desktop\ConsoleLauncher.java启动
+    - 通过IDE启动discovery-console-desktop\ConsoleLauncher.java启动
 - 图形化灰度发布桌面程序的操作视频
   - 灰度发布-版本访问策略
     - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰

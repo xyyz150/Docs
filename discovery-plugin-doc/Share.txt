@@ -154,7 +154,7 @@ Nepxion Discovery包含功能：
 </discovery>
 表示消费端服务a访问提供端服务b的时候，提供端服务b的1.0版本提供90%的权重流量，1.1版本提供10%的权重流量
 ------------------------------------------------------------
-服务发现的多版本权重灰度访问控制
+简单的多数据源数据库灰度切换
 <customization>
     <service service-name="discovery-springcloud-example-b" key="database" value="prod"/>
 </customization>

@@ -238,19 +238,12 @@ public class MySubscriber {
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
-public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
-        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
-        boolean enabled = super.apply(server, metadata);
-        if (!enabled) {
-            return false;
-        }
-
-        // 2.对Rest调用传来的Header参数（例如Token）做策略
+        // 对Rest调用传来的Header参数（例如Token）做策略
         return applyFromHeader(server, metadata);
     }
 
@@ -280,19 +273,12 @@ public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
   - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
-public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
-        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
-        boolean enabled = super.apply(server, metadata);
-        if (!enabled) {
-            return false;
-        }
-
-        // 2.对Rest调用传来的Header参数（例如Token）做策略
+        // 对Rest调用传来的Header参数（例如Token）做策略
         return applyFromHeader(server, metadata);
     }
 
@@ -323,25 +309,18 @@ public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-// 如果不想要版本路由策略，请直接implements DiscoveryEnabledAdapter，实现自定义策略 
-public class MyDiscoveryEnabledAdapter extends VersionDiscoveryEnabledAdapter {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
-        // 1.对Rest调用传来的Header的路由Version做策略。注意这个Version不是灰度发布的Version
-        boolean enabled = super.apply(server, metadata);
+        // 对Rest调用传来的Header参数（例如Token）做策略
+        boolean enabled = applyFromHeader(server, metadata);
         if (!enabled) {
             return false;
         }
 
-        // 2.对Rest调用传来的Header参数（例如Token）做策略
-        enabled = applyFromHeader(server, metadata);
-        if (!enabled) {
-            return false;
-        }
-
-        // 3.对RPC调用传来的方法参数做策略
+        // 对RPC调用传来的方法参数做策略
         return applyFromMethd(server, metadata);
     }
 

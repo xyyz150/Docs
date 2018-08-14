@@ -196,9 +196,9 @@ Nepxion Discovery包含功能：
 ------------------------------------------------------------
 用户自定义和编程灰度路由策略
 使用者可以实现跟业务有关的路由策略，根据业务参数的不同，负载均衡到不同的服务器
-1.基于服务的编程灰度路由，继承DiscoveryEnabledAdapter，通过RequestContextHolder（获取来自网关的Header参数）和ServiceStrategyContext（获取来自RPC方式的方法参数）获取业务上下文参数，进行路由自定义
-2.基于Zuul的编程灰度路由，继承DiscoveryEnabledAdapter，通过Zuul自带的RequestContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
-3.基于Spring Cloud Api Gateway的编程灰度路由，继承DiscoveryEnabledAdapter，通过GatewayStrategyContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
+1.基于服务的编程灰度路由，实现DiscoveryEnabledExtension，通过RequestContextHolder（获取来自网关的Header参数）和ServiceStrategyContext（获取来自RPC方式的方法参数）获取业务上下文参数，进行路由自定义
+2.基于Zuul的编程灰度路由，实现DiscoveryEnabledExtension，通过Zuul自带的RequestContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
+3.基于Spring Cloud Api Gateway的编程灰度路由，实现DiscoveryEnabledExtension，通过GatewayStrategyContext（获取来自网关的Header参数）获取业务上下文参数，进行路由自定义
 举例如下：
 ------------------------------------------------------------
 基于Rest请求Header头部自带版本规则的实时动态路由
@@ -209,20 +209,32 @@ Nepxion Discovery包含功能：
 
 加如下代码即可实现该功能
 @Bean
-public VersionDiscoveryEnabledAdapter versionDiscoveryEnabledAdapter() {
-    return new VersionDiscoveryEnabledAdapter();
+public MyDiscoveryEnabledExtension myDiscoveryEnabledExtension() {
+    return new MyDiscoveryEnabledExtension();
 }
 ------------------------------------------------------------
 表示在网关层（以Zuul为例），编程灰度路由策略，如下代码，表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务示例不会被负载均衡到
 代码截图
-public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+// 实现了组合策略，版本路由策略+自定义策略
+public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
+        // 对Rest调用传来的Header参数（例如Token）做策略
+        return applyFromHeader(server, metadata);
+    }
+
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
         RequestContext context = RequestContext.getCurrentContext();
         String token = context.getRequest().getHeader("token");
+        // String value = context.getRequest().getParameter("value");
+
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+
+        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
         String filterToken = "abc";
         if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
             LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
@@ -236,18 +248,28 @@ public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
 ------------------------------------------------------------
 表示在服务层，当服务名为discovery-springcloud-example-c，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
 代码截图
-public class MyDiscoveryEnabledAdapter implements DiscoveryEnabledAdapter {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledAdapter.class);
+// 实现了组合策略，版本路由策略+自定义策略
+public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
+        // 对RPC调用传来的方法参数做策略
+        return applyFromMethd(server, metadata);
+    }
+
+    // 根据RPC调用传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
+    @SuppressWarnings("unchecked")
+    private boolean applyFromMethd(Server server, Map<String, String> metadata) {
         ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
         Map<String, Object> attributes = context.getAttributes();
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
-        String version = metadata.get(PluginConstant.VERSION);
+        String version = metadata.get(DiscoveryConstant.VERSION);
 
-        String filterServiceId = "discovery-springcloud-example-c";
+        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
+        String filterServiceId = "discovery-springcloud-example-b";
         String filterVersion = "1.0";
         String filterBusinessValue = "abc";
         if (StringUtils.equals(serviceId, filterServiceId) && StringUtils.equals(version, filterVersion)) {

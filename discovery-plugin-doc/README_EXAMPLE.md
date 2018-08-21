@@ -238,8 +238,8 @@ public class MySubscriber {
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
+public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
@@ -273,8 +273,8 @@ public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
   - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
+public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
@@ -309,8 +309,8 @@ public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+自定义策略
-public class MyDiscoveryEnabledExtension implements DiscoveryEnabledExtension {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledExtension.class);
+public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {

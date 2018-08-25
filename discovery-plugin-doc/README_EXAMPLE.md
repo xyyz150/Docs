@@ -233,7 +233,7 @@ public class MySubscriber {
 ```
 
 ### 用户自定义和编程灰度路由的操作演示
-以通过Rest方式实时版本路由策略+自定义策略组合为例，具体请参考，图8、图9、图10
+以通过Rest方式的版本路由策略+区域路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
@@ -389,5 +389,9 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result9.jpg)
 
 图10
-
+只要填入版本的Json串，版本路由策略将自动开启
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result10.jpg)
+
+图11
+只要填入区域的值，区域路由策略将自动开启
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result11.jpg)

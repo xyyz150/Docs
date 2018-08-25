@@ -43,6 +43,7 @@
 # Eureka config
 eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.group=example-service-group
+eureka.instance.metadataMap.region=dev
 
 # Redis config
 spring.redis.host=localhost

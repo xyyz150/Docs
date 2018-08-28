@@ -66,6 +66,23 @@ management.port=5100
 management.server.port=5100
 ```
 
+:star:如果只想要“用户自定义和编程灰度路由”功能，而不想要灰度发布功能
+- 去除远程配置中心包的引入
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <!-- <artifactId>discovery-plugin-config-center-extension-nacos</artifactId> -->
+    <artifactId>discovery-plugin-config-center-extension-redis</artifactId>
+</dependency>
+```
+- 下面两项配置改为false
+```xml
+# 开启和关闭服务注册层面的控制。一旦关闭，服务注册的黑/白名单过滤功能将失效，最大注册数的限制过滤功能将失效。缺失则默认为true
+spring.application.register.control.enabled=false
+# 开启和关闭服务发现层面的控制。一旦关闭，服务多版本调用的控制功能将失效，动态屏蔽指定IP地址的服务实例被发现的功能将失效。缺失则默认为true
+spring.application.discovery.control.enabled=false
+```
+
 #### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 

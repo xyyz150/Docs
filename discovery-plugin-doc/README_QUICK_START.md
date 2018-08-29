@@ -40,12 +40,14 @@
 </dependency>
 ```
 - :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应引入）
+```xml
 <dependency>
     <groupId>com.nepxion</groupId>
     <artifactId>discovery-plugin-strategy-starter-service</artifactId>
     <artifactId>discovery-plugin-strategy-starter-zuul</artifactId>
     <artifactId>discovery-plugin-strategy-starter-gatewway</artifactId>
 </dependency>
+```
 
 #### 添加配置
 ```xml

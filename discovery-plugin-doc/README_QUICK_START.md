@@ -141,7 +141,7 @@ public class ConsoleApplication {
 - 运行控制平台
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 - 运行图形化灰度发布桌面程序
-  - Clone https://github.com/Nepxion/Discovery.git获取源码（注意master和Edgware分支）
+  - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
   - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序

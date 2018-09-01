@@ -13,11 +13,11 @@
 
 ## 目录
 - [快速集成](#快速集成)
-  - [引入Pom依赖](#引入Pom依赖)
+  - [引入依赖](#引入依赖)
   - [添加配置](#添加配置)
   - [更多信息](#更多信息)
 - [搭建控制平台](#搭建控制平台)
-  - [引入Pom依赖](#引入Pom依赖)
+  - [引入依赖](#引入依赖)
   - [添加配置](#添加配置)
   - [建立启动类](#建立启动类)
   - [更多信息](#更多信息)
@@ -26,7 +26,7 @@
 ## 快速集成
 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
-### 引入Pom依赖
+### 引入依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
@@ -93,7 +93,7 @@ management.server.port=5100
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
 ## 搭建控制平台
-### 引入Pom依赖
+### 引入依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本

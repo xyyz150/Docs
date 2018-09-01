@@ -12,7 +12,7 @@
 - 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）等不在本文介绍范围内
 
 ## 目录
-- [集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）](#集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）)
+- [快速集成](#快速集成)
   - [引入Pom依赖](#引入Pom依赖)
   - [添加配置](#添加配置)
   - [更多信息](#更多信息)
@@ -23,7 +23,9 @@
   - [更多信息](#更多信息)
 - [检验成果](#检验成果)
 
-## 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
+## 快速集成
+集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
+
 ### 引入Pom依赖
 - 引入全局Pom依赖
 

@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8e39a24e1be740c58b83fb81763ba317)](https://www.codacy.com/project/HaojunRen/Discovery/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nepxion/Discovery&amp;utm_campaign=Badge_Grade_Dashboard)
 
 ## 入门教程
-- 本教程以Eureka为服务注册发现，Redis为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
+- 本教程以Eureka为服务注册发现，Nacos为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
 - 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
 - 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）等不在本文介绍范围内
 
@@ -21,6 +21,7 @@
   - [添加配置](#添加配置)
   - [建立启动类](#建立启动类)
   - [更多信息](#更多信息)
+- [搭建远程配置中心](#搭建远程配置中心)
 - [检验成果](#检验成果)
 
 ## 快速集成
@@ -46,11 +47,11 @@
     <artifactId>discovery-plugin-starter-eureka</artifactId>
 </dependency>
 ```
-- 引入Redis远程配置中心扩展依赖
+- 引入Nacos远程配置中心扩展依赖
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
-    <artifactId>discovery-plugin-config-center-starter-redis</artifactId>
+    <artifactId>discovery-plugin-config-center-starter-nacos</artifactId>
 </dependency>
 ```
 - :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应引入）
@@ -70,15 +71,9 @@ eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.group=example-service-group
 eureka.instance.metadataMap.region=dev
 
-# Redis config
-spring.redis.host=localhost
-spring.redis.port=6379
-spring.redis.password=
-spring.redis.database=0
-spring.redis.pool.max-active=8
-spring.redis.pool.max-wait=-1
-spring.redis.pool.max-idle=8
-spring.redis.pool.min-idle=0
+# Nacos config
+nacos.url=localhost:8080
+nacos.timout=30000
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证
@@ -106,26 +101,20 @@ management.server.port=5100
     <scope>import</scope>
 </dependency>
 ```
-- 引入Redis远程配置中心扩展依赖
+- 引入Nacos远程配置中心扩展依赖
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
-    <artifactId>discovery-console-starter-redis</artifactId>
+    <artifactId>discovery-console-starter-nacos</artifactId>
 </dependency>
 ```
 - 引入Eureka Client依赖
 
 ### 添加配置
 ```xml
-# Redis config
-spring.redis.host=localhost
-spring.redis.port=6379
-spring.redis.password=
-spring.redis.database=0
-spring.redis.pool.max-active=8
-spring.redis.pool.max-wait=-1
-spring.redis.pool.max-idle=8
-spring.redis.pool.min-idle=0
+# Nacos config
+nacos.url=localhost:8080
+nacos.timout=30000
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证
@@ -146,6 +135,10 @@ public class ConsoleApplication {
     }
 }
 ```
+
+## 搭建远程配置中心
+- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
+- Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
 
 ### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-console工程

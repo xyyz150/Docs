@@ -14,7 +14,19 @@
 ## 目录
 - [场景描述](#场景描述)
 - [引入依赖](#引入依赖)
-- [检验成果](#检验成果)
+- [服务注册过滤的操作演示](#服务注册过滤的操作演示)
+  - [黑/白名单的IP地址注册的过滤](#黑/白名单的IP地址注册的过滤)
+  - [最大注册数的限制的过滤](#最大注册数的限制的过滤)
+  - [黑/白名单的IP地址发现的过滤](#黑/白名单的IP地址发现的过滤)
+- [服务发现和负载均衡控制的操作演示](#服务发现和负载均衡控制的操作演示)
+  - [基于图形化方式的灰度发布](#基于图形化方式的灰度发布)
+  - [基于Rest方式的灰度发布](#基于Rest方式的灰度发布)
+    - [基于服务的灰度发布](#基于服务的灰度发布)
+    - [基于网关的灰度发布](#基于网关的灰度发布)
+    - [基于数据库的灰度发布](#基于数据库的灰度发布)
+- [用户自定义和编程灰度路由的操作演示](#用户自定义和编程灰度路由的操作演示)
+  - [基于服务的用户自定义和编程灰度路由](#基于服务的用户自定义和编程灰度路由)
+  - [基于网关的用户自定义和编程灰度路由](#基于网关的用户自定义和编程灰度路由)
 
 ## 场景描述
 - 系统部署情况：
@@ -123,7 +135,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 - 你会发现A服务无法获取B服务的任何实例，即B服务受限于黑名单的IP地址列表，不会被A服务的发现；白名单操作也是如此，不过逻辑刚好相反
 
 ## 服务发现和负载均衡控制的操作演示
-### 基于图形化方式的多版本灰度访问控制
+### 基于图形化方式的灰度发布
 - 运行图形化灰度发布桌面程序
   - Clone https://github.com/Nepxion/Discovery.git获取源码（注意master和Edgware分支）
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
@@ -143,8 +155,8 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
 
-### 基于Rest方式的多版本灰度访问控制
-基于服务的操作过程和效果
+### 基于Rest方式的灰度发布
+#### 基于服务的灰度发布
 - 启动discovery-springcloud-example-service下7个DiscoveryApplication，无先后顺序，等待全部启动完毕
 - 下面URL的端口号，可以是服务端口号，也可以是管理端口号
 - 通过版本改变，达到灰度访问控制，针对A服务
@@ -211,7 +223,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result5.jpg)
 
-基于网关的操作过程和效果
+#### 基于网关的灰度发布
 - 在上面基础上，启动discovery-springcloud-example-zuul下DiscoveryApplicationZuul或者启动discovery-springcloud-example-gateway下DiscoveryApplicationGateway
 - 因为Zuul和Spring Cloud Api Gateway是一种特殊的微服务，也遵循Spring Cloud体系的服务注册发现和负载均衡机制，所以所有操作过程跟上面完全一致
 
@@ -223,7 +235,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
 
-## 多数据源的数据库切换的灰度发布
+#### 基于数据库的灰度发布
 - 监听规则的变化，获取客户化的参数，根据参数的变化动态切换数据源
 ```java
 @EventBus
@@ -249,77 +261,9 @@ public class MySubscriber {
 ```
 
 ## 用户自定义和编程灰度路由的操作演示
-以通过Rest方式的版本路由策略+区域路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11
-- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
-  - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
-```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
-public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
+下面版本路由策略+区域路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11
 
-    @Override
-    public boolean apply(Server server, Map<String, String> metadata) {
-        // 对Rest调用传来的Header参数（例如Token）做策略
-        return applyFromHeader(server, metadata);
-    }
-
-    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
-    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        RequestContext context = RequestContext.getCurrentContext();
-        String token = context.getRequest().getHeader("token");
-        // String value = context.getRequest().getParameter("value");
-
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
-
-        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
-
-        String filterToken = "abc";
-        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
-            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
-
-            return false;
-        }
-
-        return true;
-    }
-}
-```
-
-- 在网关层（以Spring Cloud Api Gateway为例），编程灰度路由策略，如下代码，策略：
-  - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
-```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
-public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
-    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
-
-    @Override
-    public boolean apply(Server server, Map<String, String> metadata) {
-        // 对Rest调用传来的Header参数（例如Token）做策略
-        return applyFromHeader(server, metadata);
-    }
-
-    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
-    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
-        String token = context.getExchange().getRequest().getHeaders().getFirst("token");
-        // String value = context.getExchange().getRequest().getQueryParams().getFirst("value");
-
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
-
-        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
-
-        String filterToken = "abc";
-        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
-            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
-
-            return false;
-        }
-
-        return true;
-    }
-}
-```
-
+### 基于服务的用户自定义和编程灰度路由
 - 在服务层，编程灰度路由策略，如下代码，同时启动两种策略：
   - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-b，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
@@ -389,6 +333,77 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
                     return false;
                 }
             }
+        }
+
+        return true;
+    }
+}
+```
+
+### 基于网关的用户自定义和编程灰度路由
+- 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
+  - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
+```java
+// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
+
+    @Override
+    public boolean apply(Server server, Map<String, String> metadata) {
+        // 对Rest调用传来的Header参数（例如Token）做策略
+        return applyFromHeader(server, metadata);
+    }
+
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
+        RequestContext context = RequestContext.getCurrentContext();
+        String token = context.getRequest().getHeader("token");
+        // String value = context.getRequest().getParameter("value");
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+
+        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
+        String filterToken = "abc";
+        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+- 在网关层（以Spring Cloud Api Gateway为例），编程灰度路由策略，如下代码，策略：
+  - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
+```java
+// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
+
+    @Override
+    public boolean apply(Server server, Map<String, String> metadata) {
+        // 对Rest调用传来的Header参数（例如Token）做策略
+        return applyFromHeader(server, metadata);
+    }
+
+    // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
+    private boolean applyFromHeader(Server server, Map<String, String> metadata) {
+        GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
+        String token = context.getExchange().getRequest().getHeaders().getFirst("token");
+        // String value = context.getExchange().getRequest().getQueryParams().getFirst("value");
+
+        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+
+        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+
+        String filterToken = "abc";
+        if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
+            LOG.info("过滤条件：当Token含有'{}'的时候，不能被Ribbon负载均衡到", filterToken);
+
+            return false;
         }
 
         return true;

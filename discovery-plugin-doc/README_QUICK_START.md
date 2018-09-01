@@ -11,8 +11,20 @@
 - 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
 - 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）等不在本文介绍范围内
 
-### 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
-#### 引入Pom依赖
+## 目录
+- [集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）](#集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）)
+  - [引入Pom依赖](#引入Pom依赖)
+  - [添加配置](#添加配置)
+  - [更多信息](#更多信息)
+- [搭建控制平台](#搭建控制平台)
+  - [引入Pom依赖](#引入Pom依赖)
+  - [添加配置](#添加配置)
+  - [建立启动类](#建立启动类)
+  - [更多信息](#更多信息)
+- [检验成果](#检验成果)
+
+## 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
+### 引入Pom依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
@@ -49,7 +61,7 @@
 </dependency>
 ```
 
-#### 添加配置
+### 添加配置
 ```xml
 # Eureka config
 eureka.instance.metadataMap.version=1.0
@@ -75,11 +87,11 @@ management.port=5100
 management.server.port=5100
 ```
 
-#### 更多信息
+### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
-### 搭建控制平台
-#### 引入Pom依赖
+## 搭建控制平台
+### 引入Pom依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
@@ -101,7 +113,7 @@ management.server.port=5100
 ```
 - 引入Eureka Client依赖
 
-#### 添加配置
+### 添加配置
 ```xml
 # Redis config
 spring.redis.host=localhost
@@ -122,7 +134,7 @@ management.port=3333
 management.server.port=3333
 ```
 
-#### 建立启动类
+### 建立启动类
 ```java
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -133,10 +145,10 @@ public class ConsoleApplication {
 }
 ```
 
-#### 更多信息
+### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-console工程
 
-### 检验成果
+## 检验成果
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取
 - 运行控制平台
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）

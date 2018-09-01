@@ -7,11 +7,16 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8e39a24e1be740c58b83fb81763ba317)](https://www.codacy.com/project/HaojunRen/Discovery/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nepxion/Discovery&amp;utm_campaign=Badge_Grade_Dashboard)
 
 ## 示例演示
-### 场景描述
 本例将模拟一个较为复杂的场景，如下图
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Version.jpg)
 
+## 目录
+- [场景描述](#场景描述)
+- [引入依赖](#引入依赖)
+- [检验成果](#检验成果)
+
+## 场景描述
 - 系统部署情况：
   - 网关Zuul集群部署了1个
   - 微服务集群部署了3个，分别是A服务集群、B服务集群、C服务集群，分别对应的实例数为2、2、3
@@ -70,7 +75,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 | --- |
 | 5555 |
 
-### 开始演示
+## 引入依赖
 - 启动服务注册发现中心，默认是Eureka。可供选择的有Eureka，Zuul，Zookeeper。Eureka，请启动discovery-springcloud-example-eureka下的应用，后两者自行安装服务器
 - 根据上面选择的服务注册发现中心，对示例下的discovery-springcloud-example-service/pom.xml进行组件切换
 ```xml
@@ -91,25 +96,34 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <!-- <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId> -->
 </dependency>
 ```
+- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应引入）
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <artifactId>discovery-plugin-strategy-starter-service</artifactId>
+    <artifactId>discovery-plugin-strategy-starter-zuul</artifactId>
+    <artifactId>discovery-plugin-strategy-starter-gatewway</artifactId>
+</dependency>
+```
 
-### 服务注册过滤的操作演示
-黑/白名单的IP地址注册的过滤
+## 服务注册过滤的操作演示
+### 黑/白名单的IP地址注册的过滤
 - 在rule.xml把本地IP地址写入到相应地方
 - 启动DiscoveryApplicationA1.java
 - 抛出禁止注册的异常，即本地服务受限于黑名单的IP地址列表，不会注册到服务注册发现中心；白名单操作也是如此，不过逻辑刚好相反
 
-最大注册数的限制的过滤
+### 最大注册数的限制的过滤
 - 在rule.xml修改最大注册数为0
 - 启动DiscoveryApplicationA1.java
 - 抛出禁止注册的异常，即本地服务受限于最大注册数，不会注册到服务注册发现中心
 
-黑/白名单的IP地址发现的过滤
+### 黑/白名单的IP地址发现的过滤
 - 在rule.xml把本地IP地址写入到相应地方
 - 启动DiscoveryApplicationA1.java和DiscoveryApplicationB1.java、DiscoveryApplicationB2.java
 - 你会发现A服务无法获取B服务的任何实例，即B服务受限于黑名单的IP地址列表，不会被A服务的发现；白名单操作也是如此，不过逻辑刚好相反
 
-### 服务发现和负载均衡控制的操作演示
-#### 基于图形化方式的多版本灰度访问控制
+## 服务发现和负载均衡控制的操作演示
+### 基于图形化方式的多版本灰度访问控制
 - 运行图形化灰度发布桌面程序
   - Clone https://github.com/Nepxion/Discovery.git获取源码（注意master和Edgware分支）
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
@@ -129,7 +143,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
 
-#### 基于Rest方式的多版本灰度访问控制
+### 基于Rest方式的多版本灰度访问控制
 基于服务的操作过程和效果
 - 启动discovery-springcloud-example-service下7个DiscoveryApplication，无先后顺序，等待全部启动完毕
 - 下面URL的端口号，可以是服务端口号，也可以是管理端口号
@@ -209,7 +223,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
 
-### 多数据源的数据库切换的灰度发布
+## 多数据源的数据库切换的灰度发布
 - 监听规则的变化，获取客户化的参数，根据参数的变化动态切换数据源
 ```java
 @EventBus
@@ -234,7 +248,7 @@ public class MySubscriber {
 }
 ```
 
-### 用户自定义和编程灰度路由的操作演示
+## 用户自定义和编程灰度路由的操作演示
 以通过Rest方式的版本路由策略+区域路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到

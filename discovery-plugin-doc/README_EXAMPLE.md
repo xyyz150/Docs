@@ -136,24 +136,13 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ## 服务发现和负载均衡控制的操作演示
 ### 基于图形化方式的灰度发布
-- 运行图形化灰度发布桌面程序
-  - Clone https://github.com/Nepxion/Discovery.git获取源码（注意master和Edgware分支）
-  - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
-  - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
-  - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
-  - 如果您是Mac系统，有两种方式启动桌面程序
-    - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动
-    - 通过IDE启动discovery-console-desktop\ConsoleLauncher.java启动
-- 图形化灰度发布桌面程序的操作视频
-  - 灰度发布-版本访问策略
-    - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
-    - 请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
-  - 灰度发布-版本权重策略
-    - 请访问[https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw](https://pan.baidu.com/s/1VXPatJ6zrUeos7uTQwM3Kw)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
-    - 请访问[http://www.iqiyi.com/w_19rzs9pll1.html](http://www.iqiyi.com/w_19rzs9pll1.html)，视频清晰度改成720P，然后最大化播放
-  - 灰度发布-全链路策略
-    - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
-    - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行图形化灰度发布桌面程序”
+
+### 基于Apollo界面的灰度发布
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行Apollo配置界面”
+
+### 基于Nacos界面的灰度发布
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行Nacos配置界面”
 
 ### 基于Rest方式的灰度发布
 #### 基于服务的灰度发布

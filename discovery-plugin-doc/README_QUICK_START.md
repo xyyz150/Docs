@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8e39a24e1be740c58b83fb81763ba317)](https://www.codacy.com/project/HaojunRen/Discovery/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nepxion/Discovery&amp;utm_campaign=Badge_Grade_Dashboard)
 
 ## 入门教程
-- 本教程以Eureka为服务注册发现，Nacos为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
+- 本教程以Eureka（Consul、Zookeeper和Nacos同理，配置不同而已）为服务注册发现，Apollo和Nacos（Redis同理）为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
 - 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_EXAMPLE.md)
 - 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）等不在本文介绍范围内
 
@@ -16,13 +16,19 @@
   - [引入依赖](#引入依赖)
   - [添加配置](#添加配置)
   - [更多信息](#更多信息)
+- [搭建远程配置中心](#搭建远程配置中心)
+  - [搭建Apollo服务器](#搭建Apollo服务器)
+  - [搭建Nacos服务器](#搭建Nacos服务器) 
 - [搭建控制平台](#搭建控制平台)
   - [引入依赖](#引入依赖)
   - [添加配置](#添加配置)
-  - [建立启动类](#建立启动类)
   - [更多信息](#更多信息)
-- [搭建远程配置中心](#搭建远程配置中心)
-- [检验成果](#检验成果)
+- [运行服务](#运行服务) 
+- [界面操作](#界面操作)
+  - [运行图形化灰度发布桌面程序](#运行图形化灰度发布桌面程序)
+  - [运行Apollo配置界面](#运行Apollo配置界面)
+  - [运行Nacos配置界面](#运行Nacos配置界面)
+  - [更多信息](#更多信息)
 
 ## 快速集成
 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
@@ -47,14 +53,15 @@
     <artifactId>discovery-plugin-starter-eureka</artifactId>
 </dependency>
 ```
-- 引入Nacos远程配置中心扩展依赖
+- 引入Apollo或者Nacos远程配置中心扩展依赖，必须选择一个引入
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
+    <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>	
     <artifactId>discovery-plugin-config-center-starter-nacos</artifactId>
 </dependency>
 ```
-- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应引入）
+- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应选择一个引入）
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -70,6 +77,11 @@
 eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.group=example-service-group
 eureka.instance.metadataMap.region=dev
+
+# Apollo config
+app.id=discovery
+apollo.meta=http://localhost:8080
+# apollo.discovery.namespace=application
 
 # Nacos config
 nacos.url=localhost:8080
@@ -88,6 +100,15 @@ management.server.port=5100
 ### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
+## 搭建远程配置中心
+### 搭建Apollo服务器
+- Apollo服务器版本，推荐用最新版本，从[https://github.com/ctripcorp/apollo/releases](https://github.com/ctripcorp/apollo/releases)获取
+- 参考Apollo主页，搭建环境
+
+### 搭建Nacos服务器
+- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
+- Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
+
 ## 搭建控制平台
 ### 引入依赖
 - 引入全局Pom依赖
@@ -102,7 +123,7 @@ management.server.port=5100
     <scope>import</scope>
 </dependency>
 ```
-- 引入Nacos远程配置中心扩展依赖
+- 引入Apollo（暂时不支持，敬请期待）或者Nacos远程配置中心扩展依赖，必须选择一个引入
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -127,36 +148,23 @@ management.port=3333
 management.server.port=3333
 ```
 
-### 建立启动类
-```java
-@SpringBootApplication
-@EnableDiscoveryClient
-public class ConsoleApplication {
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(ConsoleApplication.class).run(args);
-    }
-}
-```
-
-## 搭建远程配置中心
-- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
-- Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
-
 ### 更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-console工程
 
-## 检验成果
+## 运行服务
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取
 - 运行控制平台
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
-- 运行图形化灰度发布桌面程序
-  - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
+
+## 界面操作
+### 运行图形化灰度发布桌面程序
+- Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
+- 通过IDE启动
+  - 运行discovery-console-desktop\ConsoleLauncher.java启动
+- 通过BAT启动
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
   - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
-  - 如果您是Mac系统，有两种方式启动桌面程序
-    - 请参考“Discovery灰度发布控制台.bat”，自行编写Discovery灰度发布控制台.sh脚本启动
-    - 通过IDE启动discovery-console-desktop\ConsoleLauncher.java启动
 - 图形化灰度发布桌面程序的操作视频
   - 灰度发布-版本访问策略
     - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
@@ -167,4 +175,11 @@ public class ConsoleApplication {
   - 灰度发布-全链路策略
     - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
+
+### 运行Apollo配置界面
+
+### 运行Nacos配置界面
+- 敬请期待
+
+### 更多信息
 - 规则文件rule.xml或者rule.json的样例，请到相应的discovery-springcloud-example-xxx工程的\src\main\resources下获取，如何了解和使用规则文件，请阅读[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)

@@ -110,6 +110,7 @@ management.server.port=5100
 - Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
 
 ## 搭建控制平台
+:warning:如果您通过“图形化灰度发布桌面程序”进行规则操作，那么必须搭建控制平台；如果您依靠第三方配置平台界面（例如Apollo或者Nacos）进行规则操作，那么不需要搭建控制平台
 ### 控制平台-引入依赖
 - 引入全局Pom依赖
 

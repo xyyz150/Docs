@@ -73,7 +73,8 @@ eureka.instance.metadataMap.region=dev
 
 # Nacos config
 nacos.url=localhost:8080
-nacos.timout=30000
+# nacos.discovery.namespace=application
+# nacos.discovery.timout=30000
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证
@@ -114,7 +115,8 @@ management.server.port=5100
 ```xml
 # Nacos config
 nacos.url=localhost:8080
-nacos.timout=30000
+# nacos.discovery.namespace=application
+# nacos.discovery.timout=30000
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证

@@ -20,9 +20,9 @@
   - [搭建Apollo服务器](#搭建Apollo服务器)
   - [搭建Nacos服务器](#搭建Nacos服务器) 
 - [搭建控制平台](#搭建控制平台)
-  - [引入依赖](#引入依赖)
-  - [添加配置](#添加配置)
-  - [更多信息](#更多信息)
+  - [控制平台-引入依赖](#控制平台-引入依赖)
+  - [控制平台-添加配置](#控制平台-添加配置)
+  - [控制平台-更多信息](#控制平台-更多信息)
 - [运行服务](#运行服务) 
 - [界面操作](#界面操作)
   - [运行图形化灰度发布桌面程序](#运行图形化灰度发布桌面程序)
@@ -110,7 +110,7 @@ management.server.port=5100
 - Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
 
 ## 搭建控制平台
-### 引入依赖
+### 控制平台-引入依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
@@ -132,7 +132,7 @@ management.server.port=5100
 ```
 - 引入Eureka Client依赖
 
-### 添加配置
+### 控制平台-添加配置
 ```xml
 # Nacos config
 nacos.url=localhost:8080
@@ -148,7 +148,7 @@ management.port=3333
 management.server.port=3333
 ```
 
-### 更多信息
+### 控制平台-更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-console工程
 
 ## 运行服务

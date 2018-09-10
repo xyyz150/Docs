@@ -97,6 +97,24 @@ management.port=5100
 management.server.port=5100
 ```
 
+:star:如果只想要“用户自定义和编程灰度路由”功能，而不想要灰度发布功能
+- 去除远程配置中心包的引入
+```xml
+<dependency>
+    <groupId>com.nepxion</groupId>
+    <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
+    <!-- <artifactId>discovery-plugin-config-center-starter-nacos</artifactId> -->
+    <artifactId>discovery-plugin-config-center-starter-redis</artifactId>
+</dependency>
+```
+- 下面两项配置改为false
+```xml
+# 开启和关闭服务注册层面的控制。一旦关闭，服务注册的黑/白名单过滤功能将失效，最大注册数的限制过滤功能将失效。缺失则默认为true
+spring.application.register.control.enabled=false
+# 开启和关闭服务发现层面的控制。一旦关闭，服务多版本调用的控制功能将失效，动态屏蔽指定IP地址的服务实例被发现的功能将失效。缺失则默认为true
+spring.application.discovery.control.enabled=false
+```
+
 ### 服务-更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
@@ -159,6 +177,7 @@ management.server.port=3333
 
 ## 界面操作
 ### 运行图形化灰度发布桌面程序
+- 桌面程序对Mac环境兼容性不好，建议在Windows环境下运行该程序
 - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
 - 通过IDE启动
   - 运行discovery-console-desktop\ConsoleLauncher.java启动

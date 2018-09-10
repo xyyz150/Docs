@@ -154,7 +154,7 @@ management.server.port=3333
 
 ## 运行服务
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取
-- 运行控制平台
+- 运行控制平台（如果需要）
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
 ## 界面操作
@@ -178,6 +178,7 @@ management.server.port=3333
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
 
 ### 运行Apollo配置界面
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Apollo-1.jpg)
 
 ### 运行Nacos配置界面
 - 敬请期待

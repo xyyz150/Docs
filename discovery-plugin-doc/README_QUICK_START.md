@@ -13,9 +13,9 @@
 
 ## 目录
 - [快速集成](#快速集成)
-  - [引入依赖](#引入依赖)
-  - [添加配置](#添加配置)
-  - [更多信息](#更多信息)
+  - [服务-引入依赖](#服务-引入依赖)
+  - [服务-添加配置](#服务-添加配置)
+  - [服务-更多信息](#服务-更多信息)
 - [搭建远程配置中心](#搭建远程配置中心)
   - [搭建Apollo服务器](#搭建Apollo服务器)
   - [搭建Nacos服务器](#搭建Nacos服务器) 
@@ -33,7 +33,7 @@
 ## 快速集成
 集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
-### 引入依赖
+### 服务-引入依赖
 - 引入全局Pom依赖
 
 插件版本，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)的“依赖”章节，请根据Spring Cloud不同版本选择正确的插件版本
@@ -71,7 +71,7 @@
 </dependency>
 ```
 
-### 添加配置
+### 服务-添加配置
 ```xml
 # Eureka config
 eureka.instance.metadataMap.version=1.0
@@ -97,7 +97,7 @@ management.port=5100
 management.server.port=5100
 ```
 
-### 更多信息
+### 服务-更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
 ## 搭建远程配置中心

@@ -15,14 +15,14 @@
 - [快速集成](#快速集成)
   - [服务-引入依赖](#服务-引入依赖)
   - [服务-添加配置](#服务-添加配置)
-  - [服务-更多信息](#服务-更多信息)
-- [搭建远程配置中心](#搭建远程配置中心)
-  - [搭建Apollo服务器](#搭建Apollo服务器)
-  - [搭建Nacos服务器](#搭建Nacos服务器) 
+  - [服务-更多信息](#服务-更多信息) 
 - [搭建控制平台](#搭建控制平台)
   - [控制平台-引入依赖](#控制平台-引入依赖)
   - [控制平台-添加配置](#控制平台-添加配置)
   - [控制平台-更多信息](#控制平台-更多信息)
+- [搭建远程配置中心](#搭建远程配置中心)
+  - [搭建Apollo服务器](#搭建Apollo服务器)
+  - [搭建Nacos服务器](#搭建Nacos服务器)  
 - [运行服务](#运行服务) 
 - [界面操作](#界面操作)
   - [运行图形化灰度发布桌面程序](#运行图形化灰度发布桌面程序)
@@ -118,15 +118,6 @@ spring.application.discovery.control.enabled=false
 ### 服务-更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-service、discovery-springcloud-example-zuul、discovery-springcloud-example-gateway三个工程
 
-## 搭建远程配置中心
-### 搭建Apollo服务器
-- Apollo服务器版本，推荐用最新版本，从[https://github.com/ctripcorp/apollo/releases](https://github.com/ctripcorp/apollo/releases)获取
-- 参考Apollo主页，搭建环境
-
-### 搭建Nacos服务器
-- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
-- Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
-
 ## 搭建控制平台
 :warning:如果您通过“图形化灰度发布桌面程序”进行规则操作，那么必须搭建控制平台；如果您依靠第三方配置平台界面（例如Apollo或者Nacos）进行规则操作，那么不需要搭建控制平台
 ### 控制平台-引入依赖
@@ -169,6 +160,15 @@ management.server.port=3333
 
 ### 控制平台-更多信息
 - 请参考master（Finchley）分支或者Edgware分支下的discovery-springcloud-example-console工程
+
+## 搭建远程配置中心
+### 搭建Apollo服务器
+- Apollo服务器版本，推荐用最新版本，从[https://github.com/ctripcorp/apollo/releases](https://github.com/ctripcorp/apollo/releases)获取
+- 参考Apollo主页，搭建环境
+
+### 搭建Nacos服务器
+- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
+- Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
 
 ## 运行服务
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取

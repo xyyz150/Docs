@@ -195,6 +195,17 @@ management.server.port=3333
   - 通过“服务列表”切换，或者点击增加和删除服务按钮，确定灰度路由路径，点击“执行路由”
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console7.jpg)
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console2.jpg)
+  - 推送模式设置，“异步推送”和“同步推送”，前者是推送完后立刻返回，后者是推送完后等待推送结果（包括规则XML解析的异常等都能在界面上反映出来）；“规则推送到远程配置中心”和“规则推送到服务或者服务集群”，前者是推送到配置中心（持久化），后者是推送到一个或者多个服务机器的内存（非持久化，重启后丢失）
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console8.jpg)
+  - 执行灰度发布，选择一个服务或者服务组，右键菜单“执行灰度发布”，前者是通过单个服务实例执行灰度发布，后者是通过一组服务实例执行灰度发布
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console9.jpg)
+  - 灰度发布，包括“更改版本”和“更改规则”，前者通过更改版本号去适配灰度规则中的版本匹配关系，后者直接修改规则。“更改版本”是推送到一个或者多个服务机器的内存（非持久化，重启后丢失），“更改规则”是根据不同的推送模式，两种方式都支持
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console10.jpg)
+  - 全链路灰度发布，所有在同一个集群组（例如：eureka.instance.metadataMap.group=example-service-group）里的服务统一做灰度发布，即一个规则配置搞定所有服务的灰度发布。点击“全链路灰度发布”按钮，弹出“全链路灰度发布”对话框
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console11.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console12.jpg)
+  - 刷新灰度状态，选择一个服务或者服务组，右键菜单“刷新灰度状态”，查看某个服务或者服务组是否正在做灰度发布
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console13.jpg)
 - 操作视频
   - 灰度发布-版本访问策略
     - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰

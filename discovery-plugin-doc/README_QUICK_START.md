@@ -185,7 +185,10 @@ management.server.port=3333
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
   - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
-- 图形化灰度发布桌面程序的操作视频
+- 操作界面
+  - 点击“显示服务拓扑”按钮，弹出“服务集群选取”对话框，下拉列表是以服务所在的集群组分类列表（例如：eureka.instance.metadataMap.group=example-service-group），如果使用者想执行跨服务集群灰度发布，请选择“全部服务集群”
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console4.jpg)
+- 操作视频
   - 灰度发布-版本访问策略
     - 请访问[https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA](https://pan.baidu.com/s/1eq_N56VbgSCaTXYQ5aKqiA)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19rzwzovrl.html](http://www.iqiyi.com/w_19rzwzovrl.html)，视频清晰度改成720P，然后最大化播放
@@ -197,7 +200,7 @@ management.server.port=3333
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html(http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
 
 ### 运行Apollo配置界面
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Apollo-1.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Apollo1.jpg)
 
 ### 运行Nacos配置界面
 - 敬请期待

@@ -163,10 +163,15 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
   - 2.1 通过Postman，执行POST [http://localhost:1200/config/update-sync](http://localhost:1200/config/update-sync)，发送新的版本权重规则（内容见下面）
   - 2.2 通过Postman，执行POST [http://localhost:1201/config/update-sync](http://localhost:1201/config/update-sync)，发送新的版本权重规则（内容见下面）
   - 2.3 上述操作也可以通过控制平台，进行批量更新，见图5。操作的逻辑：B服务1.0的版本向A服务提供10%流量，B服务1.1的版本向A服务提供90%流量
-  - 2.4 不断重复执行3.1步骤，观察Ribbo负载均衡的时候，在调用B1.0和B1.1命中的概率，灰度权重控制成功
+  - 2.4 不断重复执行4.1步骤，观察Ribbo负载均衡的时候，在调用B1.0和B1.1命中的概率，灰度权重控制成功
+- 通过区域权重规则改变，达到灰度访问控制，针对B服务
+  - 3.1 通过Postman，执行POST [http://localhost:1200/config/update-sync](http://localhost:1200/config/update-sync)，发送新的区域权重规则（内容见下面）
+  - 3.2 通过Postman，执行POST [http://localhost:1201/config/update-sync](http://localhost:1201/config/update-sync)，发送新的区域权重规则（内容见下面）
+  - 3.3 上述操作也可以通过控制平台，进行批量更新（跟版本权重规则类似的操作）。操作的逻辑：B服务1.0的版本位于区域dev，所以它向A服务提供85%流量，B服务1.1的版本位于区域qa，所以它向A服务提供15%流量
+  - 3.4 不断重复执行4.1步骤，观察Ribbo负载均衡的时候，在调用B1.0和B1.1命中的概率，灰度权重控制成功  
 - 负载均衡的灰度测试
-  - 3.1 通过Postman，执行POST [http://localhost:1100/invoke](http://localhost:1100/invoke)，这是example内置的访问路径示例（通过Feign实现）
-  - 3.2 重复“通过版本改变，达到灰度访问控制”或者“通过规则改变，达到灰度访问控制”操作，查看Ribbon负载均衡的灰度结果，如图4
+  - 4.1 通过Postman，执行POST [http://localhost:1100/invoke](http://localhost:1100/invoke)，这是example内置的访问路径示例（通过Feign实现）
+  - 4.2 重复“通过版本改变，达到灰度访问控制”或者“通过规则改变，达到灰度访问控制”操作，查看Ribbon负载均衡的灰度结果，如图4
 - 上述操作，都是单次操作，如需要批量操作，可通过“控制平台”接口，它集成批量操作和推送到远程配置中心的功能，可以取代上面的某些调用方式
 - 其它更多操作，请参考“配置中心”、“管理中心”和“控制平台”
 
@@ -189,6 +194,18 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <discovery>
         <weight>
             <service consumer-service-name="discovery-springcloud-example-b" provider-service-name="discovery-springcloud-example-c" provider-weight-value="1.0=10;1.1=90"/>
+        </weight>
+    </discovery>
+</rule>
+```
+
+新的区域权重规则
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<rule>
+    <discovery>
+        <weight>
+            <region provider-weight-value="dev=85;qa=15"/>
         </weight>
     </discovery>
 </rule>

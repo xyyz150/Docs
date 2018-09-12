@@ -133,7 +133,7 @@ spring.application.discovery.control.enabled=false
     <scope>import</scope>
 </dependency>
 ```
-- 引入Apollo（暂时不支持，敬请期待）或者Nacos远程配置中心扩展依赖，必须选择一个引入
+- 引入Apollo（敬请期待）或者Nacos远程配置中心扩展依赖，必须选择一个引入
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>

@@ -4,7 +4,7 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 
 更多内容请访问 [https://github.com/Nepxion/Discovery](https://github.com/Nepxion/Discovery)
 
-那么如何整合Nacos到Spring Cloud框架中做灰度发布呢？内容分为三部分讲解，但只涉及到整合Nacos的部分，涉及到灰度发布的逻辑则不在本文的讲述范围内。由于Nacos具有非常好的用户易用性，所以整合起来代码量很少，也很简单
+那么如何整合Nacos到Spring Cloud框架中做灰度发布呢？内容分为三部分讲解，但只涉及到整合Nacos的部分，涉及到灰度发布的逻辑则不在本文的讲述范围内，请自行访问Github进行研究。由于Nacos具有非常好的用户易用性，所以整合起来代码量很少，也很简单
 - 整合Nacos配置中心到Spring Cloud做灰度发布（本文）
 - 整合Nacos服务发现到Spring Cloud做灰度发布
 - 利用Nacos控制台做Spring Cloud的灰度发布

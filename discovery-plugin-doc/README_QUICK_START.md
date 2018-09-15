@@ -81,12 +81,11 @@ eureka.instance.metadataMap.region=dev
 # Apollo config
 app.id=discovery
 apollo.meta=http://localhost:8080
-# apollo.discovery.namespace=application
+# apollo.plugin.namespace=application
 
 # Nacos config
-nacos.url=localhost:8080
-# nacos.discovery.namespace=application
-# nacos.discovery.timout=30000
+nacos.server-addr=localhost:8080
+# nacos.plugin.namespace=application
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证
@@ -145,9 +144,8 @@ spring.application.discovery.control.enabled=false
 ### 控制平台-添加配置
 ```xml
 # Nacos config
-nacos.url=localhost:8080
-# nacos.discovery.namespace=application
-# nacos.discovery.timout=30000
+nacos.server-addr=localhost:8080
+# nacos.plugin.namespace=application
 
 # Admin config
 # 关闭访问Rest接口时候的权限验证

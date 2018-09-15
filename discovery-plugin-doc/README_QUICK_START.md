@@ -186,7 +186,7 @@ management.server.port=3333
   - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
 - 操作界面
-  - 点击“显示服务拓扑”按钮，弹出“服务集群选取”对话框，下拉列表是以服务所在的集群组分类列表（例如：eureka.instance.metadataMap.group=example-service-group），选择一个并点击“确定”按钮。如果使用者想执行跨服务集群灰度发布，请选择“全部服务集群”
+  - 点击“显示服务拓扑”按钮，弹出“服务集群组过滤”对话框，列表是以服务所在的集群组列表（例如：eureka.instance.metadataMap.group=example-service-group），选择若干个并点击“确定”按钮，如果使用者想获取全部的服务集群（可能会耗性能），则直接点击“取消”按钮
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console4.jpg)
   - 从服务注册发现中心获取服务拓扑
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console5.jpg)

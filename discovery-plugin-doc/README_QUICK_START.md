@@ -97,13 +97,12 @@ management.server.port=5100
 ```
 
 :star:如果只想要“用户自定义和编程灰度路由”功能，而不想要灰度发布功能
-- 去除远程配置中心包的引入
+- 去除远程配置中心包的引入，例如如下
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
     <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
-    <!-- <artifactId>discovery-plugin-config-center-starter-nacos</artifactId> -->
-    <artifactId>discovery-plugin-config-center-starter-redis</artifactId>
+    <artifactId>discovery-plugin-config-center-starter-nacos</artifactId>
 </dependency>
 ```
 - 下面两项配置改为false

@@ -167,7 +167,7 @@ management.server.port=3333
 - 参考Apollo主页，搭建环境
 
 ### 搭建Nacos服务器
-- Nacos服务器版本，推荐用最新版本，从[https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A](https://pan.baidu.com/s/1FsPzIK8lQ8VSNucI57H67A)获取
+- Nacos服务器版本，推荐用最新版本，从[https://github.com/alibaba/nacos/releases](https://github.com/alibaba/nacos/releases)获取
 - Windows下运行bin/startup.cmd，Linux下运行bin/startup.sh即可
 
 ## 运行服务

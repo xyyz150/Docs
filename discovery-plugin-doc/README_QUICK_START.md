@@ -173,6 +173,7 @@ management.server.port=3333
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
 ## 界面操作
+如下三种方式可以达到同等效果的灰度发布效果，请任选一种
 ### 运行图形化灰度发布桌面程序
 - 桌面程序对Mac环境兼容性不好，建议在Windows环境下运行该程序
 - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
@@ -216,6 +217,15 @@ management.server.port=3333
 
 ### 运行Apollo配置界面
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Apollo1.jpg)
+- 参考Apollo官方文档[https://github.com/ctripcorp/apollo](https://github.com/ctripcorp/apollo)相关文档，搭建Apollo环境，以及熟悉相关的基本操作
+- 根据下图，做如下步骤操作
+  - 设置页面中AppId和配置文件里面app.id一致
+  - 设置页面中Namespace和配置文件里面apollo.plugin.namespace一致，如果配置文件里不设置，那么页面默认采用内置的“application”
+  - 在页面中添加配置
+    - 局部配置方式：一个服务集群（eureka.instance.metadataMap.group和spring.application.name都相同的服务）对应一个配置文件，通过group+serviceId方式添加，Key为“group-serviceId”，Value为Xml或者Json格式的规则内容。group取值于配置文件里的eureka.instance.metadataMap.group配置项，serviceId取值于spring.application.name配置项目
+    - 全局配置方式：一组服务集群（eureka.instance.metadataMap.group相同，但spring.application.name可以不相同的服务）对应一个配置文件，通过group方式添加，Key为“group-group”，Value为Xml或者Json格式的规则内容。group取值于配置文件里的eureka.instance.metadataMap.group配置项
+    - 强烈建议局部配置方式和全局配置方式不要混用，否则连使用者自己都无法搞清楚到底是哪种配置方式在起作用
+  - 其他更多参数，例如evn, cluster等，请自行参考Apollo官方文档，保持一致
 
 ### 运行Nacos配置界面
 - 敬请期待

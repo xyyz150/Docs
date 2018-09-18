@@ -232,3 +232,4 @@ management.server.port=3333
 
 ### 更多信息
 - 规则文件rule.xml或者rule.json的样例，请到相应的discovery-springcloud-example-xxx工程的\src\main\resources下获取，如何了解和使用规则文件，请阅读[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)
+- 附录[Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作

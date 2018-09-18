@@ -174,6 +174,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
   - 4.2 重复“通过版本改变，达到灰度访问控制”或者“通过规则改变，达到灰度访问控制”操作，查看Ribbon负载均衡的灰度结果，如图4
 - 上述操作，都是单次操作，如需要批量操作，可通过“控制平台”接口，它集成批量操作和推送到远程配置中心的功能，可以取代上面的某些调用方式
 - 其它更多操作，请参考“配置中心”、“管理中心”和“控制平台”
+- 附录[Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作
 
 新的版本访问规则
 ```xml

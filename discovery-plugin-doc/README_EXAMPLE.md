@@ -151,8 +151,8 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 - 启动discovery-springcloud-example-service下7个DiscoveryApplication，无先后顺序，等待全部启动完毕
 - 下面URL的端口号，可以是服务端口号，也可以是管理端口号
 - 通过版本改变，达到灰度访问控制，针对A服务
-  - 1.1 通过Postman，执行POST [http://localhost:1100/routes](http://localhost:1100/routes)，填入discovery-springcloud-example-b;discovery-springcloud-example-c，查看路由路径，如图1，可以看到符合预期的调用路径
-  - 1.2 通过Postman，执行POST [http://localhost:1100/version/update](http://localhost:1100/version/update)，填入1.1，动态把服务A的版本从1.0切换到1.1
+  - 1.1 通过Postman，执行POST [http://localhost:1100/router/routes/](http://localhost:1100/router/routes/)，填入discovery-springcloud-example-b;discovery-springcloud-example-c，查看路由路径，如图1，可以看到符合预期的调用路径
+  - 1.2 通过Postman，执行POST [http://localhost:1100/version/update-sync](http://localhost:1100/version/update-sync)，填入1.1，动态把服务A的版本从1.0切换到1.1
   - 1.3 通过Postman，再执行第一步操作，如图2，可以看到符合预期的调用路径，通过版本改变，灰度访问控制成功
 - 通过版本访问规则改变，达到灰度访问控制，针对B服务
   - 2.1 通过Postman，执行POST [http://localhost:1200/config/update-sync](http://localhost:1200/config/update-sync)，发送新的版本访问规则（内容见下面）

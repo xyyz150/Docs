@@ -44,7 +44,7 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
 ```
 
 ### 装饰类
-NacosServiceRegistryDecorator继承NacosServiceRegistry，并实现对它的核心方法进行拦截和装饰，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
+NacosServiceRegistryDecorator继承NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
 ```java
 public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(NacosServiceRegistryDecorator.class);
@@ -130,7 +130,7 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 }
 ```
 
-NacosServerListDecorator继承NacosServerList，并实现对它的核心方法进行拦截和过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
+NacosServerListDecorator继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截和过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
 ```java
 public class NacosServerListDecorator extends NacosServerList {
     private ConfigurableEnvironment environment;
@@ -182,7 +182,7 @@ public class NacosServerListDecorator extends NacosServerList {
 ```
 
 ### 适配类
-由于在不同的服务注册发现插件（例如，Eureka、Consul、Zookeeper、Nacos），或者Metadata是在Server的实现类上，所以我们要做一层适配
+由于在不同的服务注册发现插件中（例如，Eureka、Consul、Zookeeper、Nacos），获得Metadata是在Server的子类上，所以我们要做一层适配
 ```java
 public class NacosAdapter extends AbstractPluginAdapter {
     @Override

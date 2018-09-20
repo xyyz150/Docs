@@ -97,15 +97,14 @@ management.server.port=5100
 ```
 
 :star:如果只想要“用户自定义和编程灰度路由”功能，而不想要灰度发布功能
-- 去除远程配置中心包的引入，例如如下
+- “用户自定义和编程灰度路由”是不需要接入远程配置中心的，所以建议去除远程配置中心包的引入
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
-    <artifactId>discovery-plugin-config-center-starter-apollo</artifactId>
-    <artifactId>discovery-plugin-config-center-starter-nacos</artifactId>
+    <artifactId>discovery-plugin-config-center-starter-xxx</artifactId>
 </dependency>
 ```
-- 下面两项配置改为false
+- “用户自定义和编程灰度路由”是不会对服务注册发现等逻辑产生影响，所以建议下面两项配置改为false
 ```xml
 # 开启和关闭服务注册层面的控制。一旦关闭，服务注册的黑/白名单过滤功能将失效，最大注册数的限制过滤功能将失效。缺失则默认为true
 spring.application.register.control.enabled=false

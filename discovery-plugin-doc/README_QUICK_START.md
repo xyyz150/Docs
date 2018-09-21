@@ -174,14 +174,15 @@ management.server.port=3333
 ## 界面操作
 如下三种方式可以达到同等效果的灰度发布效果，请任选一种
 ### 运行图形化灰度发布桌面程序
-- 桌面程序对Mac环境兼容性不好，建议在Windows环境下运行该程序
+- 桌面程序对Windows和Mac操作系统都支持，但在Mac操作系统中界面显示有点瑕疵，但不影响功能使用
 - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
 - 通过IDE启动
   - 运行discovery-console-desktop\ConsoleLauncher.java启动
-- 通过BAT启动
+- 通过脚本启动
   - 在discovery-console-desktop目录下执行mvn clean install，target目录下将产生discovery-console-desktop-[版本号]-release的目录
   - 进入discovery-console-desktop-[版本号]-release，请修改config/console.properties中的url，该地址指向控制平台的地址
   - 运行“Discovery灰度发布控制台.bat”，启动桌面程序
+  - 如果您是操作系统，请参考“Discovery灰度发布控制台.bat”，自行编写“Discovery灰度发布控制台.sh”脚本，启动桌面程序
 - 操作界面
   - 点击“显示服务拓扑”按钮，弹出“服务集群组过滤”对话框，列表是以服务所在的集群组列表（例如：eureka.instance.metadataMap.group=example-service-group），选择若干个并点击“确定”按钮，如果使用者想获取全部的服务集群（可能会耗性能），则直接点击“取消”按钮
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Console4.jpg)

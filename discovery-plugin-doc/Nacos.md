@@ -13,7 +13,7 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 由于Nacos具有非常好的用户易用性和扩展性，所以整合起来代码量相对较少和简单。本文考虑到篇幅，只介绍涉及到整合Nacos的部分，涉及到灰度发布和路由的逻辑则不在讲述范围内，请自行访问Github相关代码和文档进行研究。本文涉及的代码跟Github相关代码有较大出入，有些甚至是伪代码，其目的是避免繁琐代码，力求简单说明概念和问题
 
 ## 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
-本模块是基于spring-cloud-alibaba-nacos-discovery标准化的服务注册发现机制而实现的（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)），所以我们可以完全可以象扩展Eureka、Consul或者Zookeeper Discovery组件一样，去扩展Nacos组件做灰度发布和路由，下文主要讲述几个扩展步骤，对所有的服务注册发现组件都是大体一致，细节有所区别
+本模块是基于spring-cloud-alibaba-nacos-discovery（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)）标准化的服务注册发现机制而实现的，所以我们可以完全可以象扩展Eureka、Consul或者Zookeeper Discovery组件一样，去扩展Nacos组件做灰度发布和路由，下文主要讲述几个扩展步骤，对所有的服务注册发现组件都是大体一致，细节有所区别
 
 ### 装饰类
 服务注册层面的装饰类 - NacosServiceRegistryDecorator继承和装饰NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能

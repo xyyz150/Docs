@@ -1,11 +1,11 @@
-# Nepxion Discovery - 基于Nacos做Spring Cloud灰度发布和路由
+# Nepxion Discovery - 基于Nacos实现Spring Cloud灰度发布和路由
 
 ## 前言
 Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon负载均衡、Feign和RestTemplate调用的增强中间件，其功能包括灰度发布（包括切换发布和平滑发布）、服务隔离、服务路由、服务权重、黑/白名单的IP地址过滤、限制注册、限制发现等，支持Eureka、Consul、Zookeeper和阿里巴巴的Nacos为服务注册发现中间件，支持阿里巴巴的Nacos、携程的Apollo和Redis为远程配置中心，支持Spring Cloud Api Gateway（Finchley版）、Zuul网关和微服务的灰度发布，支持多数据源的数据库灰度发布等客户特色化灰度发布，支持用户自定义和编程灰度路由策略（包括RPC和REST两种调用方式），兼容Spring Cloud Edgware版和Finchley版（不支持Dalston版，因为它的生命周期将在2018年12月结束，如果您无法回避使用Dalston版，请自行修改源码或者联系我）。现有的Spring Cloud微服务很方便引入该中间件，代码零侵入
 
 更多内容请访问 [https://github.com/Nepxion/Discovery](https://github.com/Nepxion/Discovery)
 
-那么如何基于Nacos做Spring Cloud灰度发布和路由呢？主要分为如下三部分
+那么如何基于Nacos实现Spring Cloud灰度发布和路由呢？主要分为如下三部分
 - 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
 - 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
 - 利用Nacos控制台，实现Spring Cloud的灰度发布和路由规则的配置

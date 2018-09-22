@@ -1,54 +1,24 @@
-# Nepxion Discovery - 整合Nacos到Spring Cloud做灰度发布
+# Nepxion Discovery - 基于Nacos的Spring Cloud灰度发布和路由框架
 
-## 引子
+## 前言
 Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon负载均衡、Feign和RestTemplate调用的增强中间件，其功能包括灰度发布（包括切换发布和平滑发布）、服务隔离、服务路由、服务权重、黑/白名单的IP地址过滤、限制注册、限制发现等，支持Eureka、Consul、Zookeeper和阿里巴巴的Nacos为服务注册发现中间件，支持阿里巴巴的Nacos、携程的Apollo和Redis为远程配置中心，支持Spring Cloud Api Gateway（Finchley版）、Zuul网关和微服务的灰度发布，支持多数据源的数据库灰度发布等客户特色化灰度发布，支持用户自定义和编程灰度路由策略（包括RPC和REST两种调用方式），兼容Spring Cloud Edgware版和Finchley版（不支持Dalston版，因为它的生命周期将在2018年12月结束，如果您无法回避使用Dalston版，请自行修改源码或者联系我）。现有的Spring Cloud微服务很方便引入该中间件，代码零侵入
 
 更多内容请访问 [https://github.com/Nepxion/Discovery](https://github.com/Nepxion/Discovery)
 
-## 前言
-那么如何整合Nacos到Spring Cloud框架中做灰度发布呢？内容分为三部分讲解，但只涉及到整合Nacos的部分，涉及到灰度发布的逻辑则不在本文的讲述范围内，请自行访问Github进行研究。由于Nacos具有非常好的用户易用性，所以整合起来代码量很少，也很简单
-- 整合Nacos服务发现到Spring Cloud做灰度发布
-- 利用Nacos配置中心到Spring Cloud做灰度发布
-- 利用Nacos控制台做Spring Cloud的灰度发布
+那么如何基于Nacos的Spring Cloud灰度发布和路由框架呢？主要分为如下三部分
+- 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
+- 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
+- 利用Nacos控制台，实现Spring Cloud的灰度发布和路由规则的配置
 
-## 整合Nacos服务发现到Spring Cloud做灰度发布
-### 初始化类
-ApplicationContextInitializer是在Spring容器初始化的时候执行，对NacosServiceRegistry对象进行拦截，执行装饰者模式，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把灰度发布所要用到的Metadata数据植入，并注册到Nacos服务器上
-```java
-public class NacosApplicationContextInitializer extends PluginApplicationContextInitializer {
-    @Override
-    protected Object afterInitialization(ConfigurableApplicationContext applicationContext, Object bean, String beanName) throws BeansException {
-        if (bean instanceof NacosServiceRegistry) {
-            NacosServiceRegistry nacosServiceRegistry = (NacosServiceRegistry) bean;
+由于Nacos具有非常好的用户易用性和扩展性，所以整合起来代码量相对较少和简单。本文考虑到篇幅，只介绍涉及到整合Nacos的部分，涉及到灰度发布和路由的逻辑则不在讲述范围内，请自行访问Github相关代码和文档进行研究。本文涉及的代码跟Github相关代码有较大出入，有些甚至是伪代码，其目的是避免繁琐代码，力求简单说明概念和问题
 
-            return new NacosServiceRegistryDecorator(nacosServiceRegistry, applicationContext);
-        } else if (bean instanceof NacosDiscoveryProperties) {
-            ConfigurableEnvironment environment = applicationContext.getEnvironment();
-
-            NacosDiscoveryProperties nacosDiscoveryProperties = (NacosDiscoveryProperties) bean;
-
-            Map<String, String> metadata = nacosDiscoveryProperties.getMetadata();
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_DISCOVERY_PLUGIN, NacosConstant.DISCOVERY_PLUGIN);
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_REGISTER_CONTROL_ENABLED, PluginContextAware.isRegisterControlEnabled(environment).toString());
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_DISCOVERY_CONTROL_ENABLED, PluginContextAware.isDiscoveryControlEnabled(environment).toString());
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_CONFIG_REST_CONTROL_ENABLED, PluginContextAware.isConfigRestControlEnabled(environment).toString());
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_GROUP_KEY, PluginContextAware.getGroupKey(environment));
-            metadata.put(DiscoveryConstant.SPRING_APPLICATION_CONTEXT_PATH, PluginContextAware.getContextPath(environment));
-
-            return bean;
-        } else {
-            return bean;
-        }
-    }
-}
-```
+## 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
+本模块是基于spring-cloud-alibaba-nacos-discovery标准化的服务注册发现机制而实现的（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)），所以我们可以完全可以象扩展Eureka、Consul或者Zookeeper Discovery组件一样，去扩展Nacos组件做灰度发布和路由，下文主要讲述几个扩展步骤，对所有的服务注册发现组件都是大体一致，细节有所区别
 
 ### 装饰类
-NacosServiceRegistryDecorator继承NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
+服务注册层面的装饰类 - NacosServiceRegistryDecorator继承和装饰NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
 ```java
 public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
-    private static final Logger LOG = LoggerFactory.getLogger(NacosServiceRegistryDecorator.class);
-
     private NacosServiceRegistry serviceRegistry;
     private ConfigurableApplicationContext applicationContext;
     private ConfigurableEnvironment environment;
@@ -61,45 +31,31 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 
     @Override
     public void register(NacosRegistration registration) {
-        Boolean registerControlEnabled = PluginContextAware.isRegisterControlEnabled(environment);
-        if (registerControlEnabled) {
-            try {
-                RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
-                registerListenerExecutor.onRegister(registration);
-            } catch (BeansException e) {
-                LOG.warn("Get bean for RegisterListenerExecutor failed, ignore to executor listener");
-            }
-        }
+        // 注册之前，registerListenerExecutor.onRegister方法里，执行如下操作：
+        // 1. 触发黑/白名单的IP地址注册的过滤规则。如果不符合，中断注册抛出异常
+        // 2. 触发最大注册数的限制的过滤规则。如果不符合，中断注册抛出异常
+        // 上述规则，可以同时启用，也可以单独存在
+        RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
+        registerListenerExecutor.onRegister(registration);
 
+        // 执行NacosServiceRegistry的逻辑
         serviceRegistry.register(registration);
     }
 
     @Override
     public void deregister(NacosRegistration registration) {
-        Boolean registerControlEnabled = PluginContextAware.isRegisterControlEnabled(environment);
-        if (registerControlEnabled) {
-            try {
-                RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
-                registerListenerExecutor.onDeregister(registration);
-            } catch (BeansException e) {
-                LOG.warn("Get bean for RegisterListenerExecutor failed, ignore to executor listener");
-            }
-        }
+        // 反注册之前，执行registerListenerExecutor.onDeregister方法里，可执行相关逻辑，目前是空实现，可以让用户自行扩展。下同
+        RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
+        registerListenerExecutor.onDeregister(registration);
 
+        // 执行NacosServiceRegistry的逻辑。下同
         serviceRegistry.deregister(registration);
     }
 
     @Override
     public void setStatus(NacosRegistration registration, String status) {
-        Boolean registerControlEnabled = PluginContextAware.isRegisterControlEnabled(environment);
-        if (registerControlEnabled) {
-            try {
-                RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
-                registerListenerExecutor.onSetStatus(registration, status);
-            } catch (BeansException e) {
-                LOG.warn("Get bean for RegisterListenerExecutor failed, ignore to executor listener");
-            }
-        }
+        RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
+        registerListenerExecutor.onSetStatus(registration, status);
 
         serviceRegistry.setStatus(registration, status);
     }
@@ -111,15 +67,8 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 
     @Override
     public void close() {
-        Boolean registerControlEnabled = PluginContextAware.isRegisterControlEnabled(environment);
-        if (registerControlEnabled) {
-            try {
-                RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
-                registerListenerExecutor.onClose();
-            } catch (BeansException e) {
-                LOG.warn("Get bean for RegisterListenerExecutor failed, ignore to executor listener");
-            }
-        }
+        RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
+        registerListenerExecutor.onClose();
 
         serviceRegistry.close();
     }
@@ -130,7 +79,7 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 }
 ```
 
-NacosServerListDecorator继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截和过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
+服务发现层面的装饰类 - NacosServerListDecorator继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截和过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
 ```java
 public class NacosServerListDecorator extends NacosServerList {
     private ConfigurableEnvironment environment;
@@ -147,6 +96,7 @@ public class NacosServerListDecorator extends NacosServerList {
 
     @Override
     public List<NacosServer> getInitialListOfServers() {
+        // 获取初始化服务列表的时候，做过滤和拦截
         List<NacosServer> servers = super.getInitialListOfServers();
 
         filter(servers);
@@ -156,6 +106,7 @@ public class NacosServerListDecorator extends NacosServerList {
 
     @Override
     public List<NacosServer> getUpdatedListOfServers() {
+        // 定时更新服务列表的时候，做过滤和拦截
         List<NacosServer> servers = super.getUpdatedListOfServers();
 
         filter(servers);
@@ -164,11 +115,13 @@ public class NacosServerListDecorator extends NacosServerList {
     }
 
     private void filter(List<NacosServer> servers) {
-        Boolean discoveryControlEnabled = PluginContextAware.isDiscoveryControlEnabled(environment);
-        if (discoveryControlEnabled) {
-            String serviceId = getServiceId();
-            loadBalanceListenerExecutor.onGetServers(serviceId, servers);
-        }
+        // loadBalanceListenerExecutor.onGetServers方法将触发
+        // 1. 触发版本访问的灰度路由的过滤规则，即通过微服务的版本号比对，去掉列表中不符合要求的实例
+        // 2. 触发版本权重的灰度路由的过滤规则，即通过微服务版本号对应的权重流量比对，去掉列表中不符合要求的实例
+        // 3. 触发区域权重的灰度路由的过滤规则，即通过微服务所在的区域对应的权重流量比对，去掉列表中不符合要求的实例
+        // 上述规则，可以同时启用，也可以单独存在		
+        String serviceId = getServiceId();
+        loadBalanceListenerExecutor.onGetServers(serviceId, servers);
     }
 
     public void setEnvironment(ConfigurableEnvironment environment) {
@@ -182,7 +135,14 @@ public class NacosServerListDecorator extends NacosServerList {
 ```
 
 ### 适配类
-由于在不同的服务注册发现插件中（例如，Eureka、Consul、Zookeeper、Nacos），获得Metadata是在Server的子类上，所以我们要做一层适配
+由于在不同的服务注册发现组件（Eureka、Consul、Zookeeper、Nacos）中，获得Metadata的方法是实现在Server的子类上，所以我们要做一层适配，做一次强制转换
+Metadata的数据在灰度发布和路由中起着至关重要的作用，比如灰度发布中涉及到的版本（Version）、组（Group）和区域（Region）都是通过Metadata方式提供，例如
+```xml
+spring.cloud.nacos.discovery.metadata.version=1.0
+spring.cloud.nacos.discovery.metadata.group=example-service-group
+spring.cloud.nacos.discovery.metadata.region=dev
+```
+
 ```java
 public class NacosAdapter extends AbstractPluginAdapter {
     @Override
@@ -198,8 +158,35 @@ public class NacosAdapter extends AbstractPluginAdapter {
 }
 ```
 
+### 初始化类
+ApplicationContextInitializer是在Spring容器初始化的时候执行，可以对Spring容器中的Bean进行拦截和替换。对NacosServiceRegistry对象进行拦截，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把相关的Metadata数据植入，并注册到Nacos服务器上
+```java
+public class NacosApplicationContextInitializer extends PluginApplicationContextInitializer {
+    @Override
+    protected Object afterInitialization(ConfigurableApplicationContext applicationContext, Object bean, String beanName) throws BeansException {
+        if (bean instanceof NacosServiceRegistry) {
+            NacosServiceRegistry nacosServiceRegistry = (NacosServiceRegistry) bean;
+
+            return new NacosServiceRegistryDecorator(nacosServiceRegistry, applicationContext);
+        } else if (bean instanceof NacosDiscoveryProperties) {
+            ConfigurableEnvironment environment = applicationContext.getEnvironment();
+
+            NacosDiscoveryProperties nacosDiscoveryProperties = (NacosDiscoveryProperties) bean;
+
+            Map<String, String> metadata = nacosDiscoveryProperties.getMetadata();
+            metadata.put("xxx", "yyy");
+            ... 
+
+            return bean;
+        } else {
+            return bean;
+        }
+    }
+}
+```
+
 ### 配置类
-NacosRibbonClientConfiguration里的ribbonServerList方法的返回类型，用NacosServerListDecorator装饰类替换NacosServerList，植入灰度发布的负载均衡拦截执行器
+NacosRibbonClientConfiguration里的ribbonServerList方法的返回类型，用NacosServerListDecorator装饰类替换NacosServerList，放入灰度发布的负载均衡拦截执行器
 ```java
 @Configuration
 @AutoConfigureAfter(NacosRibbonClientConfiguration.class)
@@ -245,7 +232,9 @@ com.nepxion.discovery.plugin.configcenter.configuration.ConfigAutoConfiguration,
 com.nepxion.discovery.plugin.admincenter.configuration.AdminAutoConfiguration
 ```
 
-## 利用Nacos配置中心到Spring Cloud做灰度发布
+## 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
+配置中心并没有直接用spring-cloud-alibaba-nacos-config（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)），因为灰度规则各项操作相对较复杂，所以采用了原生的Nacos Client Api（见 [https://github.com/alibaba/nacos](https://github.com/alibaba/nacos)）来实现
+
 ### Common层实现
 NacosOperation，封装了几乎所有对Nacos配置中心的操作逻辑，包括
 - 根据微服务所在的组和应用名，获取配置
@@ -351,11 +340,11 @@ public class NacosAutoConfiguration {
 }
 ```
 
-### 服务端实现
+### 微服务端实现
 NacosConfigAdapter，继承实现ConfigAdapter（处理灰度发布配置的适配器），主要有三个方法，代码实例通过伪代码方式呈现
-- getConfig，用于服务端在启动的时候，向Nacos服务器请求灰度配置
-- subscribeConfig，用于服务端在启动的时候，完成初始化对灰度配置的监听行为
-- close，用于当服务端断开和Nacos服务器连接或者Spring Bean销毁的时候，执行反订阅和线程池销毁
+- getConfig，用于微服务端在启动的时候，向Nacos服务器请求灰度配置
+- subscribeConfig，用于微服务端在启动的时候，完成初始化对灰度配置的监听行为
+- close，用于当微服务端断开和Nacos服务器连接或者Spring Bean销毁的时候，执行反订阅和线程池销毁
 ```java
 @Configuration
 public class NacosConfigAdapter extends ConfigAdapter {
@@ -426,7 +415,7 @@ com.nepxion.discovery.plugin.configcenter.nacos.configuration.NacosConfigAutoCon
 ```
 
 ### 控制平台实现
-控制平台的作用是当用户自行研发基于Nacos配置界面的时候，可以通过微服务的方式发布Nacos服务器配置的操作接口
+控制平台的作用是当用户自行研发第三方管理界面的时候，可以通过微服务的方式发布Nacos服务器配置操作和汇聚的接口（我们统称它为控制平台）。对于本系统来说，目前它的作用是为Java Desktop图形化界面提供接口，您也可以使用它自行研发符合您口味的灰度发布界面
 NacosConfigAdapter，继承实现ConfigAdapter（控制平台操作配置的适配器），该类和“服务端”的类同名，但并不是同一个，主要有三个方法
 - updateConfig，用于用户界面更新配置
 - clearConfig，用于用户界面清楚配置
@@ -460,5 +449,5 @@ com.nepxion.discovery.common.nacos.configuration.NacosAutoConfiguration,\
 com.nepxion.discovery.console.nacos.configuration.NacosConfigAutoConfiguration
 ```
 
-## 利用Nacos控制台做Spring Cloud的灰度发布
-敬请期待Nacos 0.3.0版本
+## 利用Nacos控制台，实现Spring Cloud的灰度发布和路由规则的配置
+敬请期待Nacos 0.3.0版本，推出Nacos控制台

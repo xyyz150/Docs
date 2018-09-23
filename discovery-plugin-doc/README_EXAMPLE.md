@@ -137,8 +137,11 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 - 你会发现A服务无法获取B服务的任何实例，即B服务受限于黑名单的IP地址列表，不会被A服务的发现；白名单操作也是如此，不过逻辑刚好相反
 
 ## 服务发现和负载均衡控制的操作演示
-### 基于图形化界面的灰度发布
+### 基于图形化桌面程序的灰度发布
 - 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行图形化灰度发布桌面程序”
+
+### 基于图形化Web程序的灰度发布
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行图形化灰度发布Web程序”
 
 ### 基于Apollo界面的灰度发布
 - 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行Apollo配置界面”

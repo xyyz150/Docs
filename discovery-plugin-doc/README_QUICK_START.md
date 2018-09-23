@@ -172,7 +172,7 @@ management.server.port=3333
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
 ## 界面操作
-如下三种方式可以达到同等效果的灰度发布效果，请任选一种
+如下四种方式可以达到同等效果的灰度发布效果，请任选一种
 ### 运行图形化灰度发布桌面程序
 - 桌面程序对Windows和Mac操作系统都支持，但在Mac操作系统中界面显示有点瑕疵，但不影响功能使用
 - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
@@ -216,6 +216,10 @@ management.server.port=3333
   - 灰度发布-全链路策略
     - 请访问[https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg](https://pan.baidu.com/s/1XQSKCZUykc6t04xzfrFHsg)，获取更清晰的视频，注意一定要下载下来看，不要在线看，否则也不清晰
     - 请访问[http://www.iqiyi.com/w_19s1e0zf95.html](http://www.iqiyi.com/w_19s1e0zf95.html)，视频清晰度改成720P，然后最大化播放
+
+### 运行图形化灰度发布Web程序
+- 参考[https://github.com/Nepxion/DiscoveryUI](https://github.com/Nepxion/DiscoveryUI)
+- 操作过程跟“运行图形化灰度发布桌面程序”类似
 
 ### 运行Apollo配置界面
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Apollo1.jpg)

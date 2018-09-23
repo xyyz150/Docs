@@ -172,7 +172,7 @@ management.server.port=3333
 - 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
 
 ## 界面操作
-如下四种方式可以达到同等效果的灰度发布效果，请任选一种
+如下五种方式可以达到同等效果的灰度发布效果，请任选一种
 ### 运行图形化灰度发布桌面程序
 - 桌面程序对Windows和Mac操作系统都支持，但在Mac操作系统中界面显示有点瑕疵，但不影响功能使用
 - Clone [https://github.com/Nepxion/Discovery.git](https://github.com/Nepxion/Discovery.git)获取源码（注意master和Edgware分支）
@@ -236,6 +236,12 @@ management.server.port=3333
 ### 运行Nacos配置界面
 - 敬请期待
 
+### 运行Swagger或者Postman方式
+- Swagger界面
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Swagger1.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Swagger2.jpg)
+- Swagger界面
+  - [Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作
+
 ### 更多信息
 - 规则文件rule.xml或者rule.json的样例，请到相应的discovery-springcloud-example-xxx工程的\src\main\resources下获取，如何了解和使用规则文件，请阅读[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)
-- 附录[Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作

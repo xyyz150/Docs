@@ -186,7 +186,7 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
 ```
 
 ### 配置类
-NacosRibbonClientConfiguration里的ribbonServerList方法的返回类型，用NacosServerListDecorator装饰类替换NacosServerList，放入灰度发布的负载均衡拦截执行器
+由于NacosRibbonClientConfiguration的ribbonServerList方法用@ConditionalOnMissingBean注解，这样我们可以用自定义的扩展替换掉它。我们用NacosServerListDecorator装饰类替换NacosServerList作为ribbonServerList方法返回值，放入灰度发布的负载均衡拦截执行器LoadBalanceListenerExecutor
 ```java
 @Configuration
 @AutoConfigureAfter(NacosRibbonClientConfiguration.class)
@@ -209,7 +209,7 @@ public class NacosLoadBalanceConfiguration {
     }
 }
 ```
-指定RibbonClients注解的配置类列表，包含PluginLoadBalanceConfiguration和NacosLoadBalanceConfiguration。PluginLoadBalanceConfiguration封装了通用灰度发布逻辑（这里不展开了）
+我们需要指定RibbonClients注解的配置类列表，包含PluginLoadBalanceConfiguration和NacosLoadBalanceConfiguration。PluginLoadBalanceConfiguration封装了通用灰度发布逻辑（这里不展开了）
 ```java
 @Configuration
 @RibbonClients(defaultConfiguration = { PluginLoadBalanceConfiguration.class, NacosLoadBalanceConfiguration.class })
@@ -231,6 +231,15 @@ com.nepxion.discovery.plugin.framework.configuration.NacosAutoConfiguration,\
 com.nepxion.discovery.plugin.configcenter.configuration.ConfigAutoConfiguration,\
 com.nepxion.discovery.plugin.admincenter.configuration.AdminAutoConfiguration
 ```
+
+### 配置文件
+```xml
+# Nacos config
+spring.cloud.nacos.discovery.server-addr=localhost:8848
+# spring.cloud.nacos.discovery.namespace=discovery
+```
+
+这样，整个基于spring-cloud-alibaba-nacos-discovery的灰度发布和路由功能就完成了，代码简单而扩展性强
 
 ## 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的推送、订阅
 配置中心并没有直接用spring-cloud-alibaba-nacos-config（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)），因为灰度规则各项操作相对较复杂，所以采用了原生的Nacos Client Api（见 [https://github.com/alibaba/nacos](https://github.com/alibaba/nacos)）来实现

@@ -9,7 +9,7 @@
 ## 示例演示
 本例将模拟一个较为复杂的场景，如下图
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Version.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Version.jpg)
 
 ## 目录
 - [场景描述](#场景描述)
@@ -19,7 +19,8 @@
   - [最大注册数的限制的过滤](#最大注册数的限制的过滤)
   - [黑/白名单的IP地址发现的过滤](#黑/白名单的IP地址发现的过滤)
 - [服务发现和负载均衡控制的操作演示](#服务发现和负载均衡控制的操作演示)
-  - [基于图形化界面的灰度发布](#基于图形化界面的灰度发布)
+  - [基于图形化桌面程序的灰度发布](#基于图形化桌面程序的灰度发布)
+  - [基于图形化Web程序的灰度发布](#基于图形化Web程序的灰度发布)  
   - [基于Apollo界面的灰度发布](#基于Apollo界面的灰度发布)
   - [基于Nacos界面的灰度发布](#基于Nacos界面的灰度发布)
   - [基于Rest方式的灰度发布](#基于Rest方式的灰度发布)
@@ -138,16 +139,16 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 ## 服务发现和负载均衡控制的操作演示
 ### 基于图形化桌面程序的灰度发布
-- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行图形化灰度发布桌面程序”
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)的“运行图形化灰度发布桌面程序”
 
 ### 基于图形化Web程序的灰度发布
-- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行图形化灰度发布Web程序”
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)的“运行图形化灰度发布Web程序”
 
 ### 基于Apollo界面的灰度发布
-- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行Apollo配置界面”
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)的“运行Apollo配置界面”
 
 ### 基于Nacos界面的灰度发布
-- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/README_QUICK_START.md)的“运行Nacos配置界面”
+- 见[入门教程](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_QUICK_START.md)的“运行Nacos配置界面”
 
 ### 基于Rest方式的灰度发布
 #### 基于服务的灰度发布
@@ -177,7 +178,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
   - 4.2 重复“通过版本改变，达到灰度访问控制”或者“通过规则改变，达到灰度访问控制”操作，查看Ribbon负载均衡的灰度结果，如图4
 - 上述操作，都是单次操作，如需要批量操作，可通过“控制平台”接口，它集成批量操作和推送到远程配置中心的功能，可以取代上面的某些调用方式
 - 其它更多操作，请参考“配置中心”、“管理中心”和“控制平台”
-- 附录[Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作
+- 附录[Postman操作集合](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Nepxion.postman_collection.json)，请下载到本地，导入到Postman中执行相关操作
 
 新的版本访问规则
 ```xml
@@ -217,23 +218,23 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 图1
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result1.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result1.jpg)
 
 图2
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result2.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result2.jpg)
 
 图3
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result3.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result3.jpg)
 
 图4
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result4.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result4.jpg)
 
 图5
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result5.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result5.jpg)
 
 #### 基于网关的灰度发布
 - 在上面基础上，启动discovery-springcloud-example-zuul下DiscoveryApplicationZuul或者启动discovery-springcloud-example-gateway下DiscoveryApplicationGateway
@@ -241,11 +242,11 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 图6
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result6.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result6.jpg)
 
 图7
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result7.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result7.jpg)
 
 #### 基于数据库的灰度发布
 - 监听规则的变化，获取客户化的参数，根据参数的变化动态切换数据源
@@ -425,16 +426,16 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
 图8
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result8.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result8.jpg)
 
 图9
 
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result9.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result9.jpg)
 
 图10
 只要填入版本的Json串，版本路由策略将自动开启
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result10.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result10.jpg)
 
 图11
 只要填入区域的值，区域路由策略将自动开启
-![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-plugin-doc/Result11.jpg)
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result11.jpg)

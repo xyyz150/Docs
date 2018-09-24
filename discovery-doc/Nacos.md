@@ -8,7 +8,7 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 ## 主题
 那么如何基于Nacos实现Spring Cloud灰度发布和路由呢？主要分为如下三部分
 - 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
-- 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
+- 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的推送、订阅
 - 利用Nacos控制台，实现Spring Cloud的灰度发布和路由规则的配置
 
 无论是原生的Nacos Client，还是Nacos Spring、Nacos SpringBoot，或者Nacos SpringCloud都具有非常好的用户易用性和扩展性，尤其是Spring系列，紧紧遵循Spring生态的规范，所以大家可以看到整合起来代码量相对较少、也比较简单。本文考虑到篇幅，只介绍涉及到整合Nacos的部分，涉及到具体灰度发布和路由的逻辑则不在讲述范围内，请自行访问Github相关代码和文档进行研究。本文涉及的代码跟Github相关代码有较大出入，有些甚至是伪代码，其目的是避免繁琐代码，力求简单说明概念和问题
@@ -233,7 +233,7 @@ com.nepxion.discovery.plugin.configcenter.configuration.ConfigAutoConfiguration,
 com.nepxion.discovery.plugin.admincenter.configuration.AdminAutoConfiguration
 ```
 
-## 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
+## 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的推送、订阅
 配置中心并没有直接用spring-cloud-alibaba-nacos-config（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)），因为灰度规则各项操作相对较复杂，所以采用了原生的Nacos Client Api（见 [https://github.com/alibaba/nacos](https://github.com/alibaba/nacos)）来实现
 
 ### Common层实现

@@ -32,24 +32,24 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 
     @Override
     public void register(NacosRegistration registration) {
-        // 注册之前，registerListenerExecutor.onRegister方法里，执行如下操作：
+        // 注册之前，在registerListenerExecutor.onRegister方法里，执行如下操作：
         // 1. 触发黑/白名单的IP地址注册的过滤规则。如果不符合，中断注册抛出异常
         // 2. 触发最大注册数的限制的过滤规则。如果不符合，中断注册抛出异常
         // 上述规则，可以同时启用，也可以单独存在
         RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
         registerListenerExecutor.onRegister(registration);
 
-        // 执行NacosServiceRegistry的逻辑
+        // 执行NacosServiceRegistry里的逻辑
         serviceRegistry.register(registration);
     }
 
     @Override
     public void deregister(NacosRegistration registration) {
-        // 反注册之前，执行registerListenerExecutor.onDeregister方法里，可执行相关逻辑，目前是空实现，可以让用户自行扩展。下同
+        // 反注册之前，在registerListenerExecutor.onDeregister方法里，执行相关逻辑。目前是空实现，可以让用户自行扩展。下同
         RegisterListenerExecutor registerListenerExecutor = applicationContext.getBean(RegisterListenerExecutor.class);
         registerListenerExecutor.onDeregister(registration);
 
-        // 执行NacosServiceRegistry的逻辑。下同
+        // 执行NacosServiceRegistry里的逻辑。下同
         serviceRegistry.deregister(registration);
     }
 
@@ -80,7 +80,7 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 }
 ```
 
-服务发现层面的装饰类 - NacosServerListDecorator继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截和过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
+服务发现层面的装饰类 - NacosServerListDecorator继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
 ```java
 public class NacosServerListDecorator extends NacosServerList {
     private ConfigurableEnvironment environment;
@@ -97,7 +97,7 @@ public class NacosServerListDecorator extends NacosServerList {
 
     @Override
     public List<NacosServer> getInitialListOfServers() {
-        // 获取初始化服务列表的时候，做过滤和拦截
+        // 获取初始化服务列表的时候，进行拦截过滤
         List<NacosServer> servers = super.getInitialListOfServers();
 
         filter(servers);
@@ -107,7 +107,7 @@ public class NacosServerListDecorator extends NacosServerList {
 
     @Override
     public List<NacosServer> getUpdatedListOfServers() {
-        // 定时更新服务列表的时候，做过滤和拦截
+        // 定时更新服务列表的时候，进行拦截过滤
         List<NacosServer> servers = super.getUpdatedListOfServers();
 
         filter(servers);
@@ -136,14 +136,13 @@ public class NacosServerListDecorator extends NacosServerList {
 ```
 
 ### 适配类
-由于在不同的服务注册发现组件（Eureka、Consul、Zookeeper、Nacos）中，获得Metadata的方法是实现在Server的子类上，所以我们要做一层适配，做一次强制转换
-Metadata的数据在灰度发布和路由中起着至关重要的作用，比如灰度发布中涉及到的版本（Version）、组（Group）和区域（Region）都是通过Metadata方式提供，例如
+由于在不同的服务注册发现组件（Eureka、Consul、Zookeeper、Nacos）中，获得Metadata的逻辑是实现在Server的子类上，所以我们要做一层适配。Metadata的数据在灰度发布和路由中起着至关重要的作用，比如灰度发布中涉及到的版本（Version）、组（Group）和区域（Region）都是通过Metadata方式提供，例如
 ```xml
 spring.cloud.nacos.discovery.metadata.version=1.0
 spring.cloud.nacos.discovery.metadata.group=example-service-group
 spring.cloud.nacos.discovery.metadata.region=dev
 ```
-
+适配类代码如下
 ```java
 public class NacosAdapter extends AbstractPluginAdapter {
     @Override
@@ -160,7 +159,7 @@ public class NacosAdapter extends AbstractPluginAdapter {
 ```
 
 ### 初始化类
-ApplicationContextInitializer是在Spring容器初始化的时候执行，可以对Spring容器中的Bean进行拦截和替换。对NacosServiceRegistry对象进行拦截，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把相关的Metadata数据植入，并注册到Nacos服务器上
+ApplicationContextInitializer是在Spring容器初始化的时候执行，可以对Spring容器中的Bean进行拦截和替换。对NacosServiceRegistry对象进行拦截，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把本地相关的Metadata数据写入，并注册到Nacos服务器上，这样让第三方监控系统拿到相关的灰度发布数据，做监控分析
 ```java
 public class NacosApplicationContextInitializer extends PluginApplicationContextInitializer {
     @Override

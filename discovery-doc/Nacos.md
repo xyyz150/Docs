@@ -5,12 +5,13 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 
 更多内容请访问 [https://github.com/Nepxion/Discovery](https://github.com/Nepxion/Discovery)
 
+## 主题
 那么如何基于Nacos实现Spring Cloud灰度发布和路由呢？主要分为如下三部分
 - 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
 - 利用Nacos配置中心，实现Spring Cloud的灰度发布和路由规则的订阅
 - 利用Nacos控制台，实现Spring Cloud的灰度发布和路由规则的配置
 
-由于Nacos具有非常好的用户易用性和扩展性，所以整合起来代码量相对较少和简单。本文考虑到篇幅，只介绍涉及到整合Nacos的部分，涉及到灰度发布和路由的逻辑则不在讲述范围内，请自行访问Github相关代码和文档进行研究。本文涉及的代码跟Github相关代码有较大出入，有些甚至是伪代码，其目的是避免繁琐代码，力求简单说明概念和问题
+无论是原生的Nacos Client，还是Nacos Spring、Nacos SpringBoot，或者Nacos SpringCloud都具有非常好的用户易用性和扩展性，尤其是Spring系列，紧紧遵循Spring生态的规范，所以大家可以看到整合起来代码量相对较少、也比较简单。本文考虑到篇幅，只介绍涉及到整合Nacos的部分，涉及到具体灰度发布和路由的逻辑则不在讲述范围内，请自行访问Github相关代码和文档进行研究。本文涉及的代码跟Github相关代码有较大出入，有些甚至是伪代码，其目的是避免繁琐代码，力求简单说明概念和问题
 
 ## 整合Nacos服务注册发现机制，实现Spring Cloud的灰度发布和路由
 本模块是基于spring-cloud-alibaba-nacos-discovery（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)）标准化的服务注册发现机制而实现的，所以我们可以完全可以象扩展Eureka、Consul或者Zookeeper Discovery组件一样，去扩展Nacos组件做灰度发布和路由，下文主要讲述几个扩展步骤，对所有的服务注册发现组件都是大体一致，细节有所区别

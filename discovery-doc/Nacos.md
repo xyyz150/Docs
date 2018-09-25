@@ -236,8 +236,8 @@ com.nepxion.discovery.plugin.admincenter.configuration.AdminAutoConfiguration
 ```xml
 # Nacos config
 spring.cloud.nacos.discovery.server-addr=localhost:8848
-# spring.cloud.nacos.discovery.namespace=discovery
 ```
+更多配置请参考[官方配置文件](https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/nacos-example/nacos-discovery-example/readme-zh.md)
 
 这样，整个基于spring-cloud-alibaba-nacos-discovery的灰度发布和路由功能就完成了，代码简单而扩展性强
 

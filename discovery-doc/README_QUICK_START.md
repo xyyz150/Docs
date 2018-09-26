@@ -75,17 +75,17 @@
 
 ### 服务-添加配置
 ```xml
-# Eureka config
+# Eureka config for discovery
 eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.group=example-service-group
 eureka.instance.metadataMap.region=dev
 
-# Apollo config
+# Apollo config for rule
 app.id=discovery
 apollo.meta=http://localhost:8080
 # apollo.plugin.namespace=application
 
-# Nacos config
+# Nacos config for rule
 nacos.server-addr=localhost:8080
 # nacos.plugin.namespace=application
 
@@ -143,7 +143,7 @@ spring.application.discovery.control.enabled=false
 
 ### 控制平台-添加配置
 ```xml
-# Nacos config
+# Nacos config for rule
 nacos.server-addr=localhost:8080
 # nacos.plugin.namespace=application
 

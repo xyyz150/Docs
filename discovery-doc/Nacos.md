@@ -154,7 +154,7 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
             NacosDiscoveryProperties nacosDiscoveryProperties = (NacosDiscoveryProperties) bean;
 
             Map<String, String> metadata = nacosDiscoveryProperties.getMetadata();
-            metadata.put("myKey", "myData");
+            metadata.put("key", "value");
             ... 
 
             return bean;

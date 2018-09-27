@@ -17,7 +17,7 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 本模块是基于spring-cloud-alibaba-nacos-discovery（见 [https://github.com/spring-cloud-incubator/spring-cloud-alibaba](https://github.com/spring-cloud-incubator/spring-cloud-alibaba)）标准化的服务注册发现机制而实现的，所以我们可以完全可以象扩展Eureka、Consul或者Zookeeper Discovery组件一样，去扩展Nacos组件做灰度发布和路由，下文主要讲述几个扩展步骤，对所有的服务注册发现组件都是大体一致
 
 ### 装饰类
-服务注册层面的装饰类 - NacosServiceRegistryDecorator，继承和装饰NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
+NacosServiceRegistryDecorator，服务注册层面的装饰类，继承和装饰NacosServiceRegistry，实现通过RegisterListenerExecutor注册监听执行器对它的核心方法进行拦截，从而实现在注册层面的“黑/白名单的IP地址注册的过滤规则”、“最大注册数的限制的过滤规则”等功能
 ```java
 public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
     private NacosServiceRegistry serviceRegistry;
@@ -68,7 +68,7 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 }
 ```
 
-服务发现层面的装饰类 - NacosServerListDecorator，继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
+NacosServerListDecorator，服务发现层面的装饰类，继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
 ```java
 public class NacosServerListDecorator extends NacosServerList {
     private LoadBalanceListenerExecutor loadBalanceListenerExecutor;
@@ -118,7 +118,7 @@ public class NacosServerListDecorator extends NacosServerList {
 ```
 
 ### 适配类
-由于在不同的服务注册发现组件（Eureka、Consul、Zookeeper、Nacos）中，获得Metadata的逻辑是实现在Server的子类上，所以我们要做一层适配。Metadata的数据在灰度发布和路由中起着至关重要的作用，比如灰度发布中涉及到的版本（Version）、组（Group）和区域（Region）都是通过Metadata方式提供，例如
+NacosAdapter，适配器类。由于在不同的服务注册发现组件（Eureka、Consul、Zookeeper、Nacos）中，获得Metadata的逻辑是实现在Server的子类上，所以我们要做一层适配。Metadata的数据在灰度发布和路由中起着至关重要的作用，比如灰度发布中涉及到的版本（Version）、组（Group）和区域（Region）都是通过Metadata方式提供，例如
 ```xml
 spring.cloud.nacos.discovery.metadata.version=1.0
 spring.cloud.nacos.discovery.metadata.group=example-service-group
@@ -141,7 +141,7 @@ public class NacosAdapter extends AbstractPluginAdapter {
 ```
 
 ### 初始化类
-NacosApplicationContextInitializer是在Spring容器初始化的时候执行，可以对Spring容器中的Bean进行拦截和替换。对NacosServiceRegistry对象进行拦截，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把本地相关的Metadata数据写入，并注册到Nacos服务器上，这样让第三方监控系统拿到相关的灰度发布数据，做监控分析
+NacosApplicationContextInitializer，作为初始化类，是在Spring容器初始化的时候执行，可以对Spring容器中的Bean进行拦截和替换。对NacosServiceRegistry对象进行拦截，由NacosServiceRegistryDecorator去代理；对NacosDiscoveryProperties对象进行拦截，并把本地相关的Metadata数据写入，并注册到Nacos服务器上，这样让第三方监控系统拿到相关的灰度发布数据，做监控分析
 ```java
 public class NacosApplicationContextInitializer extends PluginApplicationContextInitializer {
     @Override
@@ -166,7 +166,7 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
 ```
 
 ### 配置类
-由于NacosRibbonClientConfiguration的ribbonServerList方法用@ConditionalOnMissingBean注解，这样我们可以用自定义的扩展替换掉它。在NacosLoadBalanceConfiguration里，我们用NacosServerListDecorator装饰类替换NacosServerList作为ribbonServerList方法返回值，放入灰度发布的负载均衡拦截执行器LoadBalanceListenerExecutor
+NacosLoadBalanceConfiguration，负载均衡的配置类。由于NacosRibbonClientConfiguration的ribbonServerList方法用@ConditionalOnMissingBean注解，这样我们可以用自定义的扩展替换掉它。在NacosLoadBalanceConfiguration里，我们用NacosServerListDecorator装饰类替换NacosServerList作为ribbonServerList方法返回值，放入灰度发布的负载均衡拦截执行器LoadBalanceListenerExecutor
 ```java
 @Configuration
 @AutoConfigureAfter(NacosRibbonClientConfiguration.class)

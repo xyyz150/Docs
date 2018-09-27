@@ -21,14 +21,6 @@ Nepxion Discovery是一款对Spring Cloud Discovery服务注册发现、Ribbon�
 ```java
 public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
     private NacosServiceRegistry serviceRegistry;
-    private ConfigurableApplicationContext applicationContext;
-    private ConfigurableEnvironment environment;
-
-    public NacosServiceRegistryDecorator(NacosServiceRegistry serviceRegistry, ConfigurableApplicationContext applicationContext) {
-        this.serviceRegistry = serviceRegistry;
-        this.applicationContext = applicationContext;
-        this.environment = applicationContext.getEnvironment();
-    }
 
     @Override
     public void register(NacosRegistration registration) {
@@ -73,18 +65,12 @@ public class NacosServiceRegistryDecorator extends NacosServiceRegistry {
 
         serviceRegistry.close();
     }
-
-    public ConfigurableEnvironment getEnvironment() {
-        return environment;
-    }
 }
 ```
 
 服务发现层面的装饰类 - NacosServerListDecorator，继承NacosServerList，实现通过LoadBalanceListenerExecutor负载均衡监听执行器对它的核心方法进行拦截过滤，从而实现在负载均衡层面的“版本访问的灰度路由规则”、“版本权重的灰度路由规则”、“区域权重的灰度路由规则”等功能
 ```java
 public class NacosServerListDecorator extends NacosServerList {
-    private ConfigurableEnvironment environment;
-
     private LoadBalanceListenerExecutor loadBalanceListenerExecutor;
 
     public NacosServerListDecorator() {
@@ -123,10 +109,6 @@ public class NacosServerListDecorator extends NacosServerList {
         // 上述规则，可以同时启用，也可以单独存在		
         String serviceId = getServiceId();
         loadBalanceListenerExecutor.onGetServers(serviceId, servers);
-    }
-
-    public void setEnvironment(ConfigurableEnvironment environment) {
-        this.environment = environment;
     }
 
     public void setLoadBalanceListenerExecutor(LoadBalanceListenerExecutor loadBalanceListenerExecutor) {
@@ -169,12 +151,10 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
 
             return new NacosServiceRegistryDecorator(nacosServiceRegistry, applicationContext);
         } else if (bean instanceof NacosDiscoveryProperties) {
-            ConfigurableEnvironment environment = applicationContext.getEnvironment();
-
             NacosDiscoveryProperties nacosDiscoveryProperties = (NacosDiscoveryProperties) bean;
 
             Map<String, String> metadata = nacosDiscoveryProperties.getMetadata();
-            metadata.put("xxx", "yyy");
+            metadata.put("myKey", "myData");
             ... 
 
             return bean;
@@ -191,10 +171,6 @@ public class NacosApplicationContextInitializer extends PluginApplicationContext
 @Configuration
 @AutoConfigureAfter(NacosRibbonClientConfiguration.class)
 public class NacosLoadBalanceConfiguration {
-
-    @Autowired
-    private ConfigurableEnvironment environment;
-
     @Autowired
     private LoadBalanceListenerExecutor loadBalanceListenerExecutor;
 
@@ -202,7 +178,6 @@ public class NacosLoadBalanceConfiguration {
     public ServerList<?> ribbonServerList(IClientConfig config) {
         NacosServerListDecorator serverList = new NacosServerListDecorator();
         serverList.initWithNiwsConfig(config);
-        serverList.setEnvironment(environment);
         serverList.setLoadBalanceListenerExecutor(loadBalanceListenerExecutor);
 
         return serverList;
@@ -306,7 +281,7 @@ public interface NacosSubscribeCallback {
 }
 ```
 
-NacosAutoConfiguration，通过AutoConfiguration初始化ConfigService和NacosOperation
+NacosAutoConfiguration，通过AutoConfiguration初始化NacosConfigService和NacosOperation
 - 通过@ConditionalOnMissingBean的方式，允许用户通过自己实现的ConfigService进行注入，来代替内置方式
 - 如果通过内置方式，那么用户只需要在配置文件里，填入相关配置，即可完成初始化。如下配置除了url必填之外，其它也可以由用户自行去定义
 ```xml

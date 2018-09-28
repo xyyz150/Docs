@@ -290,7 +290,7 @@ nacos.url=localhost:8080
 # nacos.discovery.namespace=application
 # nacos.discovery.timout=30000
 ```
-
+NacosAutoConfiguration类代码
 ```java
 @Configuration
 public class NacosAutoConfiguration {

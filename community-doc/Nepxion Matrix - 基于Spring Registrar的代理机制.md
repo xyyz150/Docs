@@ -8,7 +8,7 @@ Nepxion Matrix是一款集成Spring AutoProxy，Spring Registrar和Spring Import
 ### 主题
 本文主要阐述基于Spring Registrar的代理机制，实现类似Spring Cloud中@FeignClient伪代理的功能，只有接口没有实现类，就能实现注入和动态代理，源码参考和剥离Spring Cloud相关代码而成。它的特点是
 - 如果本地只有接口并加相关的注解，那么执行对应的切面调用方式
-- 如果本地有接口(不管是否加注解)，并也有实现类，那么执行对应的实现类的逻辑
+- 如果本地有接口（不管是否加注解），并也有实现类，那么执行对应的实现类的逻辑
 
 ### 源代码
 我们通过源代码来讲解（具体代码位于matrix-aop工程下的com.nepxion.matrix.registrar）

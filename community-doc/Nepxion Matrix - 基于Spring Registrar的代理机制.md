@@ -500,10 +500,10 @@ public class MyInvoker {
 ```
 
 #### MyApplication
+- 本例展示在Spring Boot入口加上@EnableMyAnnotation，在接口（不需要实现类）加上MyAnnotation，就可以实现调用拦截的功能，模拟出FeignClient的调用场景
+- MySerivice1，MySerivice2头部都加有@EnableMyAnnotation注解，执行MyInterceptor的切面调用
+- MySerivice3虽然头部加有注解，但它有实现类，那么优先执行实现类的注入，MyInterceptor的切面调用将不起效果
 ```java
-// 本例展示在Spring Boot入口加上@EnableMyAnnotation，在接口（不需要实现类）加上MyAnnotation，就可以实现调用拦截的功能
-// MySerivice1, MySerivice2头部都加有@EnableMyAnnotation注解，执行MyInterceptor的切面调用
-// MySerivice3虽然头部加有注解，但它有实现类，那么优先执行实现类的注入，MyInterceptor的切面调用将不起效果
 @SpringBootApplication
 @EnableMyAnnotation
 public class MyApplication {

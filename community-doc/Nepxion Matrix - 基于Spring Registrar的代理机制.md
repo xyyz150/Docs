@@ -66,10 +66,10 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
         // 扫描带有自定义注解的类
         AnnotationTypeFilter annotationTypeFilter = new AnnotationTypeFilter(getAnnotationClass());
         scanner.addIncludeFilter(annotationTypeFilter);
-		// 确定扫描的包路径列表
+        // 确定扫描的包路径列表
         Set<String> basePackages = getBasePackages(metadata);
 
-        // 开始循环扫描，并把根据注解信息，进行相关注册
+        // 循环扫描，并把根据注解信息，进行相关注册
         for (String basePackage : basePackages) {
             Set<BeanDefinition> candidateComponents = scanner.findCandidateComponents(basePackage);
             for (BeanDefinition candidateComponent : candidateComponents) {
@@ -189,15 +189,15 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
 ```
 
 #### 抽象委托类 - RegistrarFactoryBean
-它是一个FactoryBean类，作为代理机制的委托和桥梁作用
+它是一个FactoryBean类，作为代理机制的委托和桥梁作用。它在AbstractRegistrar被注册到Spring Ioc容器中。在容器初始化后，执行afterPropertiesSet，确定确定实现类和接口的代理关系，并创建代理对象
 ```java
 public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBean<Object>, InitializingBean, BeanClassLoaderAware {
     private ApplicationContext applicationContext;
-	// 接口类型
+    // 接口类型
     private Class<?> interfaze;
     // 切面类
     private MethodInterceptor interceptor;
-	// 代理类
+    // 代理类
     private Object proxy;
     private ClassLoader classLoader;
 
@@ -212,7 +212,7 @@ public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBea
 
     @Override
     public Object getObject() throws Exception {
-        // 返回代理对象	
+        // 返回代理对象
         return proxy;
     }
 
@@ -263,10 +263,10 @@ public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBea
 ```
 
 #### 抽象切面类 - AbstractRegistrarInterceptor
-它是一个Interceptor类，实现最终的业务层面的代理逻辑
+它是一个Interceptor类，实现最终的业务层面的代理逻辑。MutablePropertyValues是汇集注解属性，供供业务层参考和使用，一般可能用不到
 ```java
 public abstract class AbstractRegistrarInterceptor extends AbstractInterceptor {
-    // 注解属性，以供业务层参考和使用，一般可能用不到
+    // 注解属性，以供业务层参考和使用
     protected MutablePropertyValues annotationValues;
 
     public AbstractRegistrarInterceptor(MutablePropertyValues annotationValues) {
@@ -287,7 +287,7 @@ public abstract class AbstractRegistrarInterceptor extends AbstractInterceptor {
 我们通过示例代码来讲解（具体代码位于matrix-spring-boot-registrar-example工程下）
 
 #### EnableMyAnnotation
-用法类似于@EnableFeignClients
+用法类似于@EnableFeignClients，必须@Import(MyRegistrar.class)
 ```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -399,7 +399,7 @@ public class MyInterceptor extends AbstractRegistrarInterceptor {
 ```
 
 #### MyRegistrar
-继承AbstractRegistrar，实现上面定义的类的汇集
+继承AbstractRegistrar，实现上面定义的类的返回
 ```java
 public class MyRegistrar extends AbstractRegistrar {
     @Override
@@ -502,7 +502,7 @@ public class MyInvoker {
 #### MyApplication
 - 本例展示在Spring Boot入口加上@EnableMyAnnotation，在接口（不需要实现类）加上MyAnnotation，就可以实现调用拦截的功能，模拟出FeignClient的调用场景
 - MySerivice1，MySerivice2头部都加有@EnableMyAnnotation注解，执行MyInterceptor的切面调用
-- MySerivice3虽然头部加有注解，但它有实现类，那么优先执行实现类的注入，MyInterceptor的切面调用将不起效果
+- MySerivice3虽然头部加有注解，但它有实现类，那么优先执行实现类的注入（@Primary），MyInterceptor的切面调用将不起效果
 ```java
 @SpringBootApplication
 @EnableMyAnnotation
@@ -517,7 +517,7 @@ public class MyApplication {
     }
 }
 ```
-运行MyApplication，最终输出结果
+运行MyApplication，最终输出结果，从接口我们可以看到，调用MyServier1和MyServier2执行MyInterceptor中的逻辑，调用MyServier3执行它的实现类中的逻辑
 ```xml
 ---------------------代理信息---------------------
 Interface=com.nepxion.matrix.registrar.example.service.MyService1, methodName=doA, arguments=A

@@ -517,7 +517,7 @@ public class MyApplication {
     }
 }
 ```
-运行MyApplication，最终输出结果，从接口我们可以看到，调用MyServier1和MyServier2执行MyInterceptor中的逻辑，调用MyServier3执行它的实现类中的逻辑
+运行MyApplication，从最终输出的结果，我们可以看到，调用MyServier1和MyServier2执行MyInterceptor中的逻辑，调用MyServier3执行它的实现类中的逻辑
 ```xml
 ---------------------代理信息---------------------
 Interface=com.nepxion.matrix.registrar.example.service.MyService1, methodName=doA, arguments=A

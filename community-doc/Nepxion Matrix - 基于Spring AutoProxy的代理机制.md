@@ -22,7 +22,7 @@ Nepxion Matrix是一款集成Spring AutoProxy，Spring Registrar和Spring Import
 ### 源代码
 我们通过源代码来讲解（具体代码位于matrix-aop工程下的com.nepxion.matrix.proxy）
 
-#### 抽象自动扫描登记类 - AbstractAutoScanProxy，继承AbstractAutoProxyCreator
+#### 抽象自动扫描类 - AbstractAutoScanProxy，继承AbstractAutoProxyCreator
 ```java
 public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     private static final long serialVersionUID = 6827218905375993727L;
@@ -408,170 +408,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
 #### 抽象切面类 - AbstractInterceptor
 ```java
 public abstract class AbstractInterceptor implements MethodInterceptor {
-    // 通过标准反射来获取变量名，适用于接口代理
-    // 只作用在Java8下，同时需要在IDE和Maven里设置"-parameters"的Compiler Argument。参考如下：
-    // 1)Eclipse加"-parameters"参数：https://www.concretepage.com/java/jdk-8/java-8-reflection-access-to-parameter-names-of-method-and-constructor-with-maven-gradle-and-eclipse-using-parameters-compiler-argument
-    // 2)Idea加"-parameters"参数：http://blog.csdn.net/royal_lr/article/details/52279993
-    private ParameterNameDiscoverer standardReflectionParameterNameDiscoverer = new StandardReflectionParameterNameDiscoverer();
-
-    // 通过解析字节码文件的本地变量表来获取的，只支持CGLIG(ASM library)，适用于类代理
-    private ParameterNameDiscoverer localVariableTableParameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-
-    public boolean isCglibAopProxy(MethodInvocation invocation) {
-        return getProxyClassName(invocation).contains(ProxyConstant.CGLIB);
-    }
-
-    public String getProxyType(MethodInvocation invocation) {
-        boolean isCglibAopProxy = isCglibAopProxy(invocation);
-        if (isCglibAopProxy) {
-            return ProxyConstant.PROXY_TYPE_CGLIB;
-        } else {
-            return ProxyConstant.PROXY_TYPE_REFLECTIVE;
-        }
-    }
-
-    public Class<?> getProxyClass(MethodInvocation invocation) {
-        return invocation.getClass();
-    }
-
-    public String getProxyClassName(MethodInvocation invocation) {
-        return getProxyClass(invocation).getCanonicalName();
-    }
-
-    public Object getProxiedObject(MethodInvocation invocation) {
-        return invocation.getThis();
-    }
-
-    public Class<?> getProxiedClass(MethodInvocation invocation) {
-        return getProxiedObject(invocation).getClass();
-    }
-
-    public String getProxiedClassName(MethodInvocation invocation) {
-        return getProxiedClass(invocation).getCanonicalName();
-    }
-
-    public Class<?>[] getProxiedInterfaces(MethodInvocation invocation) {
-        return getProxiedClass(invocation).getInterfaces();
-    }
-
-    public Annotation[] getProxiedClassAnnotations(MethodInvocation invocation) {
-        return getProxiedClass(invocation).getAnnotations();
-    }
-
-    public Method getMethod(MethodInvocation invocation) {
-        return invocation.getMethod();
-    }
-
-    public String getMethodName(MethodInvocation invocation) {
-        return getMethod(invocation).getName();
-    }
-
-    public Annotation[][] getMethodParameterAnnotations(MethodInvocation invocation) {
-        return getMethod(invocation).getParameterAnnotations();
-    }
-
-    public Class<?>[] getMethodParameterTypes(MethodInvocation invocation) {
-        return getMethod(invocation).getParameterTypes();
-    }
-
-    public String getMethodParameterTypesValue(MethodInvocation invocation) {
-        Class<?>[] parameterTypes = getMethodParameterTypes(invocation);
-        String parameterTypesValue = ProxyUtil.toString(parameterTypes);
-
-        return parameterTypesValue;
-    }
-
-    // 获取变量名
-    public String[] getMethodParameterNames(MethodInvocation invocation) {
-        Method method = getMethod(invocation);
-
-        boolean isCglibAopProxy = isCglibAopProxy(invocation);
-        if (isCglibAopProxy) {
-            return localVariableTableParameterNameDiscoverer.getParameterNames(method);
-        } else {
-            return standardReflectionParameterNameDiscoverer.getParameterNames(method);
-        }
-    }
-
-    public Annotation[] getMethodAnnotations(MethodInvocation invocation) {
-        return getMethod(invocation).getAnnotations();
-    }
-
-    public Object[] getArguments(MethodInvocation invocation) {
-        return invocation.getArguments();
-    }
-
-    // 获取参数注解对应的参数值。例如方法doXX(@MyAnnotation String id)，根据MyAnnotation注解和String类型，获得id的值
-    // 但下面的方法只适用于同时满足如下三个条件的场景（更多场景请自行扩展）：
-    // 1. 方法注解parameterAnnotationType，只能放在若干个参数中的一个
-    // 2. 方法注解parameterAnnotationType，对应的参数类型必须匹配给定的类型parameterType
-    // 3. 方法注解parameterAnnotationType，对应的参数值不能为null
-    @SuppressWarnings("unchecked")
-    public <T> T getValueByParameterAnnotation(MethodInvocation invocation, Class<?> parameterAnnotationType, Class<T> parameterType) {
-        String methodName = getMethodName(invocation);
-        String parameterTypesValue = getMethodParameterTypesValue(invocation);
-        Annotation[][] parameterAnnotations = getMethodParameterAnnotations(invocation);
-        Object[] arguments = getArguments(invocation);
-
-        if (ArrayUtils.isEmpty(parameterAnnotations)) {
-            throw new ProxyException("Not found any annotations");
-        }
-
-        T value = null;
-        int annotationIndex = 0;
-        int valueIndex = 0;
-        for (Annotation[] parameterAnnotation : parameterAnnotations) {
-            for (Annotation annotation : parameterAnnotation) {
-                if (annotation.annotationType() == parameterAnnotationType) {
-                    // 方法注解在方法上只允许有一个（通过判断value的重复赋值）
-                    if (value != null) {
-                        throw new ProxyException("Only 1 annotation=" + parameterAnnotationType.getName() + " can be added in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "]");
-                    }
-
-                    Object object = arguments[valueIndex];
-                    // 方法注解的值不允许为空
-                    if (object == null) {
-                        throw new ProxyException("Value for annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "] is null");
-                    }
-
-                    // 方法注解的类型不匹配
-                    if (object.getClass() != parameterType) {
-                        throw new ProxyException("Type for annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "] must be " + parameterType.getName());
-                    }
-
-                    value = (T) object;
-
-                    annotationIndex++;
-                }
-            }
-            valueIndex++;
-        }
-
-        if (annotationIndex == 0) {
-            return null;
-            // throw new MatrixException("Not found annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "]");
-        }
-
-        return value;
-    }
-
-    public String getSpelKey(MethodInvocation invocation, String key) {
-        String[] parameterNames = getMethodParameterNames(invocation);
-        Object[] arguments = getArguments(invocation);
-
-        // 使用SPEL进行Key的解析
-        ExpressionParser parser = new SpelExpressionParser();
-
-        // SPEL上下文
-        EvaluationContext context = new StandardEvaluationContext();
-
-        // 把方法参数放入SPEL上下文中
-        for (int i = 0; i < parameterNames.length; i++) {
-            context.setVariable(parameterNames[i], arguments[i]);
-        }
-
-        return parser.parseExpression(key).getValue(context, String.class);
-    }
+    // 由于篇幅关系，略过
 }
 ```
 
@@ -599,51 +436,7 @@ public @interface MyAnnotation1 {
 public class MyInterceptor1 extends AbstractInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        String proxyClassName = getProxyClassName(invocation);
-        Object[] arguments = getArguments(invocation);
-        String proxiedClassName = getProxiedClassName(invocation);
-        Class<?>[] proxiedInterfaces = getProxiedInterfaces(invocation);
-        Annotation[] classAnnotations = getProxiedClassAnnotations(invocation);
-        String methodName = getMethodName(invocation);
-        Annotation[] methodAnnotations = getMethodAnnotations(invocation);
-        String[] parameterNames = getMethodParameterNames(invocation);
-
-        System.out.println("------------------------------------------------------------------------------------------");
-        System.out.println("My Interceptor 1 :");
-        System.out.println("   proxyClassName=" + proxyClassName);
-        System.out.println("   className=" + proxiedClassName);
-        System.out.println("   classAnnotations=");
-        for (Annotation classAnnotation : classAnnotations) {
-            System.out.println("      " + classAnnotation.toString());
-        }
-
-        if (proxiedInterfaces != null) {
-            for (Class<?> proxiedInterface : proxiedInterfaces) {
-                System.out.println("   interfaceName=" + proxiedInterface.getCanonicalName());
-                System.out.println("   interfaceAnnotations=");
-                for (Annotation interfaceAnnotation : proxiedInterface.getAnnotations()) {
-                    System.out.println("      " + interfaceAnnotation.toString());
-                }
-            }
-        }
-
-        System.out.println("   methodName=" + methodName);
-        System.out.println("   methodAnnotations=");
-        for (Annotation methodAnnotation : methodAnnotations) {
-            System.out.println("      " + methodAnnotation.toString());
-        }
-
-        System.out.println("   arguments=");
-        for (int i = 0; i < arguments.length; i++) {
-            System.out.println("      " + arguments[i].toString());
-        }
-        if (ArrayUtils.isNotEmpty(parameterNames)) {
-            System.out.println("   parameterNames=");
-            for (int i = 0; i < parameterNames.length; i++) {
-                System.out.println("      " + parameterNames[i].toString());
-            }
-        }
-        System.out.println("------------------------------------------------------------------------------------------");
+        // 由于篇幅关系，略过
 
         return invocation.proceed();
     }

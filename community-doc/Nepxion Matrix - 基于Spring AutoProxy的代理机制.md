@@ -22,7 +22,7 @@ Nepxion Matrix是一款集成Spring AutoProxy，Spring Registrar和Spring Import
 ### 源代码
 我们通过源代码来讲解（具体代码位于matrix-aop工程下的com.nepxion.matrix.proxy）
 
-#### 抽象自动扫描类 - AbstractAutoScanProxy，继承AbstractAutoProxyCreator
+#### 抽象自动扫描类 - AbstractAutoScanProxy
 ```java
 public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     private static final long serialVersionUID = 6827218905375993727L;

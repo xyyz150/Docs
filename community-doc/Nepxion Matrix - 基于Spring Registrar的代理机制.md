@@ -159,7 +159,7 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
             basePackages.add(ClassUtils.getPackageName(clazz));
         }
 
-        // 如果扫描目录未设定，则取当前目录做为扫描目录		
+        // 如果扫描目录未设定，则取当前目录作为扫描目录		
         if (basePackages.isEmpty()) {
             basePackages.add(ClassUtils.getPackageName(importingClassMetadata.getClassName()));
         }

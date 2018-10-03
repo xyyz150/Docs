@@ -6,16 +6,17 @@ Nepxion Matrix是一款集成Spring AutoProxy，Spring Registrar和Spring Import
 更多内容请访问 [https://github.com/Nepxion/Matrix](https://github.com/Nepxion/Matrix)
 
 ### 主题
-本文主要阐述基于Spring AutoProxy的代理机制，它统一封装接口(Spring)代理和类代理(CGLIB)，注解无论在接口和类的头部或者方法上，都可以让业务端无编程的被有效切面，可以轻松快速实现对接口或者类的复杂代理业务。它的特点是
+本文主要阐述基于Spring AutoProxy的代理机制，它统一封装接口（Spring）代理和类代理（CGLIB），注解无论在接口和类的头部或者方法上，都可以让业务端执行有效切面，可以轻松快速实现对接口或者类的复杂代理业务。它的特点是
 - 实现接口走Spring代理，类走CGLIB代理
+- 实现通用代理和额外代理两种机制
 - 实现同一进程中，可以接口代理和类代理同存
 - 实现对类或者接口名上注解Annotation，方法上注解Annotation的快速扫描，并开放处理接口供业务端实现
-- 实现“只扫描不代理”，“既扫描又代理”；代理支持“只代理类或者接口名上注解”、“只代理方法上的注解”、“全部代理”三种模式；扫描支持“只扫描类或者接口名上注解”、“只扫描方法上的注解”、“全部扫描”三种模式
+- 实现“只扫描不代理”，“既扫描又代理”；代理模式ProxyMode，支持“只代理类或者接口名上注解”、“只代理方法上的注解”、“全部代理”三种模式；扫描模式ScanMode，支持“只扫描类或者接口名上注解”、“只扫描方法上的注解”、“全部扫描”三种模式
 - 实现“代理和扫描多个注解“
 - 实现“支持多个切面实现类Interceptor做调用拦截”  
-- 实现“自身调用自身的注解方法，达到切面效果”，提供自动装配(Spring 4.3.X以上的版本支持)和AopContext.currentProxy()两种方式
+- 实现“自身调用自身的注解方法，达到切面效果”，提供自动装配（Spring 4.3.X以上的版本支持）和AopContext.currentProxy()两种方式
 - 实现“只扫描指定目录”和“扫描全局目录”两种方式
-- 实现根据Java8的特性来获取注解对应方法上的变量名(不是变量类型)，支持标准反射和字节码CGLIG(ASM library)来获取，前者适用于接口代理，后者适用于类代理
+- 实现根据Java8的特性来获取注解对应方法上的变量名（不是变量类型），支持标准反射和字节码CGLIG（ASM library）来获取，前者适用于接口代理，后者适用于类代理
 
 使用者不需要关系复杂的AOP逻辑，只需要关心注解和拦截类的映射关系即可
 
@@ -23,6 +24,7 @@ Nepxion Matrix是一款集成Spring AutoProxy，Spring Registrar和Spring Import
 我们通过源代码来讲解（具体代码位于matrix-aop工程下的com.nepxion.matrix.proxy）
 
 #### 抽象自动扫描类 - AbstractAutoScanProxy
+
 ```java
 public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     private static final long serialVersionUID = 6827218905375993727L;
@@ -406,14 +408,16 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
 ```
 
 #### 抽象切面类 - AbstractInterceptor
+封装代理类和被代理类的上下文逻辑
 ```java
 public abstract class AbstractInterceptor implements MethodInterceptor {
-    // 由于篇幅关系，略过
+    // 由于字数超出微信限制，故略过，请读者自行看源码
 }
 ```
 
 ### 示例
 我们通过示例代码来讲解（具体代码位于matrix-spring-boot-proxy-example工程下）
+本文只演示最简单的一种示例
 
 #### MyAnnotation1
 ```java
@@ -431,12 +435,13 @@ public @interface MyAnnotation1 {
 ```
 
 #### MyInterceptor1
+切面拦截的实现
 ```java
 @Component("myInterceptor1")
 public class MyInterceptor1 extends AbstractInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        // 由于篇幅关系，略过
+        // 由于字数超出微信限制，故略过，请读者自行看源码
 
         return invocation.proceed();
     }
@@ -445,9 +450,9 @@ public class MyInterceptor1 extends AbstractInterceptor {
 
 #### MyAutoScanProxyForClass
 该类是核心类，确定注解和拦截代理类的映射关系
-- 通过全局拦截器实现对类头部注解的扫描和代理（通过ProxyMode.BY_CLASS_ANNOTATION_ONLY, ScanMode.FOR_CLASS_ANNOTATION_ONLY确定）
+- 通过全局拦截器实现对类头部注解的扫描和代理（通过ProxyMode.BY_CLASS_ANNOTATION_ONLY, ScanMode.FOR_CLASS_ANNOTATION_ONLY进行确定）
 - 该类描述的逻辑是，目标接口或者类头部如果出现了MyAnnotation1注解，那么该接口或者类下面所有的方法都会被执行扫描和代理，代理类为MyInterceptor1
-- 扫描路径SCAN_PACKAGES可以手工指定（支持多个），可以缺省。如果扫描目录未设定，则取当前目录做为扫描目录
+- 扫描路径SCAN_PACKAGES可以手工指定（支持多个），可以缺省。如果扫描目录未设定，则取当前目录作为扫描目录
 - 类头部注解扫描到后的方法触发classAnnotationScanned，使用者可以利用它来做一些注解数据入库等操作
 ```java
 @Component("myAutoScanProxyForClass")

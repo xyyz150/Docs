@@ -195,4 +195,8 @@ public class MyApplication {
     }
 }
 ```
-运行MyApplication，从最终输出的结果，随着注解或者配置项的不同逻辑，引起applicationContext.getBean("myBean1")中myBean1实例在容器中存在或者不存在，证明MyConfiguration的配置是根据注解或者配置项的不同逻辑决定是否需要装配
+运行MyApplication，从最终输出的结果，我们可以看到
+- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled不配置，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
+- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled=true，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
+- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled=false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中
+- 当入口不配置@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled不管是否配置，值true还是false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中

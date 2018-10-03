@@ -196,7 +196,7 @@ public class MyApplication {
 }
 ```
 运行MyApplication，从最终输出的结果，我们可以看到
-- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled不配置，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
-- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled=true，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
-- 当入口配置了@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled=false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中
-- 当入口不配置@EnableMyAnnotation，配置文件里com.nepxion.myannotation.enabled不管是否配置，值true还是false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中
+- 当入口配置了@EnableMyAnnotation，同时配置文件里com.nepxion.myannotation.enabled不配置，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
+- 当入口配置了@EnableMyAnnotation，同时配置文件里com.nepxion.myannotation.enabled=true，applicationContext.getBean("myBean1")存在于Spring Ioc容器中
+- 当入口配置了@EnableMyAnnotation，同时配置文件里com.nepxion.myannotation.enabled=false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中
+- 当入口不配置@EnableMyAnnotation，不管配置文件里com.nepxion.myannotation.enabled是否配置，值true还是false，applicationContext.getBean("myBean1")不存在于Spring Ioc容器中

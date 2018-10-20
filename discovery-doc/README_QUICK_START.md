@@ -226,7 +226,7 @@ management.server.port=3333
 ### 运行Apollo配置界面
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Apollo1.jpg)
 - 参考Apollo官方文档[https://github.com/ctripcorp/apollo](https://github.com/ctripcorp/apollo)相关文档，搭建Apollo环境，以及熟悉相关的基本操作
-- 根据下图，做如下步骤操作
+- 根据上图，做如下步骤操作
   - 设置页面中AppId和配置文件里面app.id一致
   - 设置页面中Namespace和配置文件里面apollo.plugin.namespace一致，如果配置文件里不设置，那么页面默认采用内置的“application”
   - 在页面中添加配置
@@ -236,7 +236,9 @@ management.server.port=3333
   - 其他更多参数，例如evn, cluster等，请自行参考Apollo官方文档，保持一致
 
 ### 运行Nacos配置界面
-- 敬请期待
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Nacos2.jpg)
+- 参考Nacos官方文档[https://github.com/alibaba/nacos](https://github.com/alibaba/nacos)相关文档，搭建Nacos环境，以及熟悉相关的基本操作
+- 添加配置步骤跟Apollo配置界面中的“在页面中添加配置”操作项相似
 
 ### 运行Swagger或者Postman方式
 - Swagger界面

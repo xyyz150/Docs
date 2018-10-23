@@ -148,7 +148,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:2222/console/version/update-sync/discovery-springcloud-example-a",
+			"name": "http://localhost:2222/console/version/update-sync/discovery-springcloud-example-zuul",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -174,7 +174,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:2222/console/version/clear-sync/discovery-springcloud-example-a",
+			"name": "http://localhost:2222/console/version/clear-sync/discovery-springcloud-example-zuul",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -183,7 +183,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:2222/console/version/clear-sync/discovery-springcloud-example-a",
+					"raw": "http://localhost:2222/console/version/clear-sync/discovery-springcloud-example-zuul",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -193,14 +193,14 @@
 						"console",
 						"version",
 						"clear-sync",
-						"discovery-springcloud-example-a"
+						"discovery-springcloud-example-zuul"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:2222/console/remote-config/update/example-service-group/discovery-springcloud-example-a",
+			"name": "http://localhost:2222/console/remote-config/update/example-service-group/discovery-springcloud-example-b",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -209,7 +209,7 @@
 					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<rule>\r\n    <discovery>\r\n        <version>\r\n            <service consumer-service-name=\"discovery-springcloud-example-b\" provider-service-name=\"discovery-springcloud-example-c\" consumer-version-value=\"1.0\" provider-version-value=\"3.0\"/>\r\n        </version>\r\n    </discovery>\r\n</rule>"
 				},
 				"url": {
-					"raw": "http://localhost:2222/console/remote-config/update/example-service-group/discovery-springcloud-example-a",
+					"raw": "http://localhost:2222/console/remote-config/update/example-service-group/discovery-springcloud-example-b",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -220,23 +220,23 @@
 						"remote-config",
 						"update",
 						"example-service-group",
-						"discovery-springcloud-example-a"
+						"discovery-springcloud-example-b"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:2222/console/remote-config/clear/example-service-group/discovery-springcloud-example-a",
+			"name": "http://localhost:2222/console/remote-config/clear/example-service-group/discovery-springcloud-example-b",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<rule>\r\n    <discovery>\r\n        <version>\r\n            <service consumer-service-name=\"discovery-springcloud-example-b\" provider-service-name=\"discovery-springcloud-example-c\" consumer-version-value=\"1.0\" provider-version-value=\"3.0\"/>\r\n        </version>\r\n    </discovery>\r\n</rule>"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:2222/console/remote-config/clear/example-service-group/discovery-springcloud-example-a",
+					"raw": "http://localhost:2222/console/remote-config/clear/example-service-group/discovery-springcloud-example-b",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -247,14 +247,14 @@
 						"remote-config",
 						"clear",
 						"example-service-group",
-						"discovery-springcloud-example-a"
+						"discovery-springcloud-example-b"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:2222/console/remote-config/view/example-service-group/discovery-springcloud-example-a",
+			"name": "http://localhost:2222/console/remote-config/view/example-service-group/discovery-springcloud-example-b",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -263,7 +263,7 @@
 					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<rule>\r\n    <discovery>\r\n        <version>\r\n            <service consumer-service-name=\"discovery-springcloud-example-b\" provider-service-name=\"discovery-springcloud-example-c\" consumer-version-value=\"1.0\" provider-version-value=\"3.0\"/>\r\n        </version>\r\n    </discovery>\r\n</rule>"
 				},
 				"url": {
-					"raw": "http://localhost:2222/console/remote-config/view/example-service-group/discovery-springcloud-example-a",
+					"raw": "http://localhost:2222/console/remote-config/view/example-service-group/discovery-springcloud-example-b",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -274,7 +274,7 @@
 						"remote-config",
 						"view",
 						"example-service-group",
-						"discovery-springcloud-example-a"
+						"discovery-springcloud-example-b"
 					]
 				}
 			},

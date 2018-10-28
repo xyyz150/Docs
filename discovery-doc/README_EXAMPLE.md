@@ -111,7 +111,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <!-- <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId> -->
 </dependency>
 ```
-- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应引入）
+- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Gateway（F版）端，对应引入）
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -238,7 +238,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
 
 #### 基于网关的灰度发布
 - 在上面基础上，启动discovery-springcloud-example-zuul下DiscoveryApplicationZuul或者启动discovery-springcloud-example-gateway下DiscoveryApplicationGateway
-- 因为Zuul和Spring Cloud Api Gateway是一种特殊的微服务，也遵循Spring Cloud体系的服务注册发现和负载均衡机制，所以所有操作过程跟上面完全一致
+- 因为Zuul和Spring Cloud Gateway是一种特殊的微服务，也遵循Spring Cloud体系的服务注册发现和负载均衡机制，所以所有操作过程跟上面完全一致
 
 图6
 
@@ -389,7 +389,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 }
 ```
 
-- 在网关层（以Spring Cloud Api Gateway为例），编程灰度路由策略，如下代码，策略：
+- 在网关层（以Spring Cloud Gateway为例），编程灰度路由策略，如下代码，策略：
   - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+区域路由策略+自定义策略

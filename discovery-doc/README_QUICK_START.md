@@ -9,7 +9,7 @@
 ## 入门教程
 - 本教程以Eureka（Consul、Zookeeper和Nacos同理，配置不同而已）为服务注册发现，Apollo和Nacos（Redis同理）为远程配置中心为例展开讲解，旨在帮您快速把本框架集成到您的业务系统中
 - 本教程略掉其它非必须或者锦上添花的功能，如您需要，请参考[主页](https://github.com/Nepxion/Discovery/blob/master/README.md)和[示例演示](https://github.com/Nepxion/Docs/blob/master/discovery-doc/README_EXAMPLE.md)
-- 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Api Gateway（F版）等不在本文介绍范围内
+- 本教程略掉Spring Cloud基础部分，例如如何搭建微服务、Eureka、Zuul或者Spring Cloud Gateway（F版）等不在本文介绍范围内
 
 ## 目录
 - [服务快速集成](#服务快速集成)
@@ -33,7 +33,7 @@
   - [更多信息](#更多信息)
 
 ## 服务快速集成
-集成到微服务、Zuul或者Spring Cloud Api Gateway（F版）
+集成到微服务、Zuul或者Spring Cloud Gateway（F版）
 
 ### 服务-引入依赖
 - 引入全局Pom依赖
@@ -63,7 +63,7 @@
     <artifactId>discovery-plugin-config-center-starter-nacos</artifactId>
 </dependency>
 ```
-- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Api Gateway（F版）端，对应选择一个引入）
+- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Gateway（F版）端，对应选择一个引入）
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>
@@ -171,7 +171,7 @@ management.server.port=3333
 ## 运行服务
 - 运行Eureka服务端，可以从discovery-springcloud-example-eureka获取
 - 运行控制平台（如果需要）
-- 运行您的微服务、Zuul或者Spring Cloud Api Gateway（F版）
+- 运行您的微服务、Zuul或者Spring Cloud Gateway（F版）
 
 ## 界面操作
 如下五种方式可以达到同等效果的灰度发布效果，请任选一种

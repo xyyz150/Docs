@@ -99,6 +99,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <artifactId>discovery-plugin-starter-eureka</artifactId>
     <!-- <artifactId>discovery-plugin-starter-consul</artifactId> -->
     <!-- <artifactId>discovery-plugin-starter-zookeeper</artifactId> -->
+    <!-- <artifactId>discovery-plugin-starter-nacos</artifactId> -->
     <version>${discovery.plugin.version}</version>
 </dependency>
 ```
@@ -109,6 +110,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     <!-- <artifactId>spring-cloud-starter-consul-discovery</artifactId> -->
     <!-- <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId> -->
+    <!-- <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId> -->
 </dependency>
 ```
 - :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Gateway（F版）端，对应引入）
@@ -285,6 +287,9 @@ public class MySubscriber {
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
+    @Autowired
+    private ServiceStrategyContextHolder serviceStrategyContextHolder;
+
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         // 对Rest调用传来的Header参数（例如Token）做策略
@@ -299,7 +304,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRequestAttributes();
         if (attributes == null) {
             return true;
         }
@@ -325,13 +330,12 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     // 根据RPC调用传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
     @SuppressWarnings("unchecked")
     private boolean applyFromMethod(Server server, Map<String, String> metadata) {
-        ServiceStrategyContext context = ServiceStrategyContext.getCurrentContext();
-        Map<String, Object> attributes = context.getAttributes();
+        Map<String, Object> attributes = serviceStrategyContextHolder.getMethodAttributes();
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
         String version = metadata.get(DiscoveryConstant.VERSION);
 
-        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
 
         String filterServiceId = "discovery-springcloud-example-b";
         String filterVersion = "1.0";
@@ -358,8 +362,12 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
 // 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
+
+    @Autowired
+    private ZuulStrategyContextHolder zuulStrategyContextHolder;
 
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
@@ -369,13 +377,17 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        RequestContext context = RequestContext.getCurrentContext();
-        String token = context.getRequest().getHeader("token");
-        // String value = context.getRequest().getParameter("value");
+        HttpServletRequest request = zuulStrategyContextHolder.getRequest();
+        if (request == null) {
+            return true;
+        }
+
+        String token = request.getHeader("token");
+        // String value = request.getParameter("value");
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
 
-        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
 
         String filterToken = "abc";
         if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
@@ -396,6 +408,9 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
+    @Autowired
+    private GatewayStrategyContextHolder gatewayStrategyContextHolder;
+
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         // 对Rest调用传来的Header参数（例如Token）做策略
@@ -404,13 +419,17 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        GatewayStrategyContext context = GatewayStrategyContext.getCurrentContext();
-        String token = context.getExchange().getRequest().getHeaders().getFirst("token");
-        // String value = context.getExchange().getRequest().getQueryParams().getFirst("value");
+        ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
+        if (exchange == null) {
+            return true;
+        }
+
+        String token = exchange.getRequest().getHeaders().getFirst("token");
+        // String value = exchange.getRequest().getQueryParams().getFirst("value");
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
 
-        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, context={}", serviceId, server.toString(), metadata, context);
+        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
 
         String filterToken = "abc";
         if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {

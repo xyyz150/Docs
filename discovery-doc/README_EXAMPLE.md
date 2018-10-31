@@ -67,7 +67,7 @@
 上述微服务分别见discovery-springcloud-example-service、discovery-springcloud-example-zuul和discovery-springcloud-example-gateway三个工程。相应的服务名、端口和版本见下表
 
 | 微服务 | 服务端口 | 管理端口 | 版本 | 区域 |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | A1 | 1100 | 5100 | 1.0 | dev |
 | A2 | 1101 | 5101 | 1.1 | qa |
 | B1 | 1200 | 5200 | 1.0 | dev |

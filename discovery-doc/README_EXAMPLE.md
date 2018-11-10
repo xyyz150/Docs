@@ -304,7 +304,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
         if (attributes == null) {
             return true;
         }
@@ -330,7 +330,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     // 根据RPC调用传来的方法参数（例如接口名、方法名、参数名或参数值等），选取执行调用请求的服务实例
     @SuppressWarnings("unchecked")
     private boolean applyFromMethod(Server server, Map<String, String> metadata) {
-        Map<String, Object> attributes = serviceStrategyContextHolder.getMethodAttributes();
+        Map<String, Object> attributes = serviceStrategyContextHolder.getRpcAttributes();
 
         String serviceId = server.getMetaInfo().getAppName().toLowerCase();
         String version = metadata.get(DiscoveryConstant.VERSION);
@@ -361,7 +361,6 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
 // 实现了组合策略，版本路由策略+区域路由策略+自定义策略
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);

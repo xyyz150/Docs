@@ -10,7 +10,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:1100/config/view",
 					"protocol": "http",
@@ -31,7 +34,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:1100/version/view",
 					"protocol": "http",
@@ -260,7 +266,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<rule>\r\n    <discovery>\r\n        <version>\r\n            <service consumer-service-name=\"discovery-springcloud-example-b\" provider-service-name=\"discovery-springcloud-example-c\" consumer-version-value=\"1.0\" provider-version-value=\"3.0\"/>\r\n        </version>\r\n    </discovery>\r\n</rule>"
+					"raw": ""
 				},
 				"url": {
 					"raw": "http://localhost:2222/console/remote-config/view/example-service-group/discovery-springcloud-example-b",
@@ -312,15 +318,23 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "ab"
+						"value": "ab",
+						"disabled": true
 					},
 					{
 						"key": "version",
-						"value": "{\"discovery-springcloud-example-a\":\"1.0\", \"discovery-springcloud-example-b\":\"1.0\", \"discovery-springcloud-example-c\":\"1.0;1.2\"}"
+						"value": "{\"discovery-springcloud-example-a\":\"1.0\", \"discovery-springcloud-example-b\":\"1.0\", \"discovery-springcloud-example-c\":\"1.0;1.2\"}",
+						"disabled": true
 					},
 					{
 						"key": "region",
-						"value": "dev"
+						"value": "dev",
+						"disabled": true
+					},
+					{
+						"key": "address",
+						"value": "{\"discovery-springcloud-example-a\":\"192.168.43.101:1100\", \"discovery-springcloud-example-b\":\"192.168.43.101:1201\", \"discovery-springcloud-example-c\":\"192.168.43.101:1300\"}",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -374,15 +388,23 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "ab"
+						"value": "ab",
+						"disabled": true
 					},
 					{
 						"key": "version",
-						"value": "{\"discovery-springcloud-example-a\":\"1.0\", \"discovery-springcloud-example-b\":\"1.0\", \"discovery-springcloud-example-c\":\"1.0;1.2\"}"
+						"value": "{\"discovery-springcloud-example-a\":\"1.0\", \"discovery-springcloud-example-b\":\"1.0\", \"discovery-springcloud-example-c\":\"1.0;1.2\"}",
+						"disabled": true
 					},
 					{
 						"key": "region",
-						"value": "dev"
+						"value": "dev",
+						"disabled": true
+					},
+					{
+						"key": "address",
+						"value": "{\"discovery-springcloud-example-a\":\"192.168.43.101:1100\", \"discovery-springcloud-example-b\":\"192.168.43.101:1201\", \"discovery-springcloud-example-c\":\"192.168.43.101:1300\"}",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -409,7 +431,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://127.0.0.1:8848/nacos/v1/ns/instances?serviceName=discovery-springcloud-example-c",
 					"protocol": "http",
@@ -454,7 +479,10 @@
 						"value": "LDAP"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:1212/doC/abc",
 					"protocol": "http",

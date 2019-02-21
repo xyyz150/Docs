@@ -276,14 +276,14 @@ public class MySubscriber {
 ```
 
 ## 用户自定义和编程灰度路由的操作演示
-下面版本路由策略+区域路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11
+下面版本路由策略+区域路由策略+IP和端口路由策略+自定义策略组合为例，具体请参考，图8、图9、图10、图11、图12
 
 ### 基于服务的用户自定义和编程灰度路由
 - 在服务层，编程灰度路由策略，如下代码，同时启动两种策略：
   - ServiceStrategyContext策略（获取来自RPC方式的方法参数）：因为示例中只有一个方法 String invoke(String value)，表示当服务名为discovery-springcloud-example-b，同时版本为1.0，同时参数value中包含'abc'，三个条件同时满足的情况下，在负载均衡层面，对应的服务示例不会被负载均衡到
   - RequestContextHolder策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+// 实现了组合策略，版本路由策略+区域路由策略+IP和端口路由策略+自定义策略
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
@@ -361,7 +361,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 - 在网关层（以Zuul为例），编程灰度路由策略，如下代码，策略：
   - RequestContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+// 实现了组合策略，版本路由策略+区域路由策略+IP和端口路由策略+自定义策略
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
@@ -403,7 +403,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 - 在网关层（以Spring Cloud Gateway为例），编程灰度路由策略，如下代码，策略：
   - GatewayStrategyContext策略（获取来自网关的Header参数）：表示请求的Header中的token包含'abc'，在负载均衡层面，对应的服务实例不会被负载均衡到
 ```java
-// 实现了组合策略，版本路由策略+区域路由策略+自定义策略
+// 实现了组合策略，版本路由策略+区域路由策略+IP和端口路由策略+自定义策略
 public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(MyDiscoveryEnabledStrategy.class);
 
@@ -451,9 +451,13 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result9.jpg)
 
 图10
-只要填入版本的Json串，版本路由策略将自动开启
+只要填入版本的值，版本路由策略将自动开启
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result10.jpg)
 
 图11
 只要填入区域的值，区域路由策略将自动开启
 ![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result11.jpg)
+
+图12
+只要填入IP和端口的值，IP和端口路由策略将自动开启
+![Alt text](https://github.com/Nepxion/Docs/blob/master/discovery-doc/Result12.jpg)

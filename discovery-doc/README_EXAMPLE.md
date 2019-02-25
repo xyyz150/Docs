@@ -113,7 +113,7 @@ Admin见discovery-springcloud-example-admin，对应的版本和端口号如下�
     <!-- <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId> -->
 </dependency>
 ```
-- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Gateway（F版）端，对应引入）
+- :exclamation:如果需要，引入用户自定义和编程灰度路由扩展依赖（三个依赖分别是服务端，网关Zuul端，网关Spring Cloud Gateway端，对应引入）
 ```xml
 <dependency>
     <groupId>com.nepxion</groupId>

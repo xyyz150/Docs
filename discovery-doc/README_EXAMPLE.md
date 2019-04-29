@@ -312,7 +312,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
         String token = attributes.getRequest().getHeader("token");
         // String value = attributes.getRequest().getParameter("value");
 
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String serviceId = pluginAdapter.getServerServiceId(server);
 
         LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
 
@@ -332,7 +332,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     private boolean applyFromMethod(Server server, Map<String, String> metadata) {
         Map<String, Object> attributes = serviceStrategyContextHolder.getRpcAttributes();
 
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String serviceId = pluginAdapter.getServerServiceId(server);
         String version = metadata.get(DiscoveryConstant.VERSION);
 
         LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
@@ -384,7 +384,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
         String token = request.getHeader("token");
         // String value = request.getParameter("value");
 
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String serviceId = pluginAdapter.getServerServiceId(server);
 
         LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
 
@@ -426,7 +426,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
         String token = exchange.getRequest().getHeaders().getFirst("token");
         // String value = exchange.getRequest().getQueryParams().getFirst("value");
 
-        String serviceId = server.getMetaInfo().getAppName().toLowerCase();
+        String serviceId = pluginAdapter.getServerServiceId(server);
 
         LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
 

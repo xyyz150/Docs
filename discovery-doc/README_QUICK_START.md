@@ -76,8 +76,8 @@
 ### 服务-添加配置
 ```xml
 # Eureka config for discovery
-eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.group=example-service-group
+eureka.instance.metadataMap.version=1.0
 eureka.instance.metadataMap.region=dev
 
 # Apollo config for rule

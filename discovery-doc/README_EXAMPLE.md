@@ -290,6 +290,9 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     @Autowired
     private ServiceStrategyContextHolder serviceStrategyContextHolder;
 
+    @Autowired
+    private PluginAdapter pluginAdapter;
+
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         // 对Rest调用传来的Header参数（例如Token）做策略
@@ -304,17 +307,10 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        ServletRequestAttributes attributes = serviceStrategyContextHolder.getRestAttributes();
-        if (attributes == null) {
-            return true;
-        }
-
-        String token = attributes.getRequest().getHeader("token");
-        // String value = attributes.getRequest().getParameter("value");
-
+        String token = serviceStrategyContextHolder.getHeader("token");
         String serviceId = pluginAdapter.getServerServiceId(server);
 
-        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
+        LOG.info("Serivice端负载均衡用户定制触发：token={}, serviceId={}, metadata={}", token, serviceId, metadata);
 
         String filterServiceId = "discovery-springcloud-example-c";
         String filterToken = "123";
@@ -335,7 +331,7 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
         String serviceId = pluginAdapter.getServerServiceId(server);
         String version = metadata.get(DiscoveryConstant.VERSION);
 
-        LOG.info("Serivice端负载均衡用户定制触发：serviceId={}, host={}, metadata={}, attributes={}", serviceId, server.toString(), metadata, attributes);
+        LOG.info("Serivice端负载均衡用户定制触发：attributes={}, serviceId={}, metadata={}", attributes, serviceId, metadata);
 
         String filterServiceId = "discovery-springcloud-example-b";
         String filterVersion = "1.0";
@@ -368,6 +364,9 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     @Autowired
     private ZuulStrategyContextHolder zuulStrategyContextHolder;
 
+    @Autowired
+    private PluginAdapter pluginAdapter;
+
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         // 对Rest调用传来的Header参数（例如Token）做策略
@@ -376,17 +375,10 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        HttpServletRequest request = zuulStrategyContextHolder.getRequest();
-        if (request == null) {
-            return true;
-        }
-
-        String token = request.getHeader("token");
-        // String value = request.getParameter("value");
-
+        String token = zuulStrategyContextHolder.getHeader("token");
         String serviceId = pluginAdapter.getServerServiceId(server);
 
-        LOG.info("Zuul端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
+        LOG.info("Zuul端负载均衡用户定制触发：token={}, serviceId={}, metadata={}", token, serviceId, metadata);
 
         String filterToken = "abc";
         if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
@@ -410,6 +402,9 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
     @Autowired
     private GatewayStrategyContextHolder gatewayStrategyContextHolder;
 
+    @Autowired
+    private PluginAdapter pluginAdapter;
+
     @Override
     public boolean apply(Server server, Map<String, String> metadata) {
         // 对Rest调用传来的Header参数（例如Token）做策略
@@ -418,17 +413,10 @@ public class MyDiscoveryEnabledStrategy implements DiscoveryEnabledStrategy {
 
     // 根据Rest调用传来的Header参数（例如Token），选取执行调用请求的服务实例
     private boolean applyFromHeader(Server server, Map<String, String> metadata) {
-        ServerWebExchange exchange = gatewayStrategyContextHolder.getExchange();
-        if (exchange == null) {
-            return true;
-        }
-
-        String token = exchange.getRequest().getHeaders().getFirst("token");
-        // String value = exchange.getRequest().getQueryParams().getFirst("value");
-
+        String token = gatewayStrategyContextHolder.getHeader("token");
         String serviceId = pluginAdapter.getServerServiceId(server);
 
-        LOG.info("Gateway端负载均衡用户定制触发：serviceId={}, host={}, metadata={}", serviceId, server.toString(), metadata);
+        LOG.info("Gateway端负载均衡用户定制触发：token={}, serviceId={}, metadata={}", token, serviceId, metadata);
 
         String filterToken = "abc";
         if (StringUtils.isNotEmpty(token) && token.contains(filterToken)) {
